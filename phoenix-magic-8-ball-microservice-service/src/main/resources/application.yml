@@ -1,0 +1,7 @@
+info:
+  application:
+    name: '@service.name@'
+    description: '@project.description@'
+    version: '@project.version@'
+server:
+  port: 8080

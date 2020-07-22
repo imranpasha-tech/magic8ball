@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    build: phoenix-magic-8-ball-microservice-service/target/docker
+    ports:
+      - '8080:8080'
+  nginx:
+    image: 704685811864.dkr.ecr.us-east-1.amazonaws.com/nginx-sidecar-selfsigned:latest
+    ports:
+      - '8443:443'
+    depends_on:
+      - app
+  tests:
+    build: phoenix-magic-8-ball-microservice-tests/target/docker
+    environment:
+      SERVICE_URL: https://nginx
+      SERVICE_PORT: 443
+    command: mvn clean install -Dtests=docker
+    depends_on:
+      - nginx

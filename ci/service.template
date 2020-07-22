@@ -1,0 +1,203 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: phoenix-magic-8-ball-microservice Service Deployment
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - stg
+      - prd
+
+  ImageTag:
+    Type: String
+    Default: latest
+
+  BranchName:
+    Type: String
+
+  VpcName:
+    Type: String
+    Default: default
+    Description: VPC targeted by this deployment.
+
+  TestJob:
+    Type: String
+
+  SmokeTestJob:
+    Type: String
+
+Conditions:
+  MasterDeployment: !Equals [ !Ref BranchName, 'master' ]
+
+Resources:
+  CloudWatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 30
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: nginx
+          Essential: true
+          Image: 704685811864.dkr.ecr.us-east-1.amazonaws.com/nginx-sidecar-selfsigned:latest
+          Memory: 16
+          PortMappings:
+            - ContainerPort: 443
+          Links:
+            - app
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref CloudWatchLogsGroup
+              awslogs-region: !Ref AWS::Region
+        - Name: app
+          Environment:
+            - Name: SPRING_APPLICATION_JSON
+              Value: !Sub |
+                {
+                  "DUMMY_VAR": "${ImageTag}"
+                }
+            - Name: AWS_REGION
+              Value: !Ref "AWS::Region"
+            - Name: CUSTOM_VARIABLE
+              Value: "Some value"
+          Essential: true
+          Image: !Sub 704685811864.dkr.ecr.us-east-1.amazonaws.com/phoenix-magic-8-ball-microservice:${ImageTag}
+          Memory: 512
+          Cpu: 256
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref CloudWatchLogsGroup
+              awslogs-region: !Ref AWS::Region
+      TaskRoleArn: !Ref ECSServiceRole
+              
+  ECSServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+
+  ECSDeployment:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        ServiceName: phoenix-magic-8-ball-microservice
+        Environment: !Ref Environment
+        ImageTag: !Ref ImageTag
+        ServiceDns: !If
+          - MasterDeployment
+          - phoenix-magic-8-ball-microservice
+          - !Sub phoenix-magic-8-ball-microservice-${BranchName}
+        ExportParameters: !If
+          - MasterDeployment
+          - true
+          - false
+        HealthCheckPath: /actuator/health
+        TaskMemory: '512'
+        HealthCheckGracePeriod: '60'
+        TaskDefinition: !Ref TaskDefinition
+        VpcName: !Ref VpcName
+      TemplateURL: https://s3.amazonaws.com/icims-artifacts-us-east-1/cfn/solutions/ecs-service.template
+
+  DefaultSecurityGroup:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Parameter: !Sub /${Environment}/vpc/${VpcName}/sg/default
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-parameter
+
+  PrivateSubnets:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Parameter: !Sub /${Environment}/vpc/${VpcName}/subnets/private
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-parameter
+
+  VpcId:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Parameter: !Sub /${Environment}/vpc/${VpcName}/id
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-parameter
+
+  SmokeTest:
+    Type: AWS::CodeBuild::Project
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W32
+            reason: If no EncryptionKey value is specified, CodeBuild uses the default CMK for S3.
+    Properties:
+      Name: !Sub ${Environment}-${SmokeTestJob}
+      Description: Smoke tests for phoenix-magic-8-ball-microservice
+      ServiceRole: !GetAtt ECSDeployment.Outputs.AcceptanceTestRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: !Sub 704685811864.dkr.ecr.us-east-1.amazonaws.com/phoenix-magic-8-ball-microservice:${ImageTag}-test
+        ImagePullCredentialsType: SERVICE_ROLE
+        EnvironmentVariables:
+          - Name: SERVICE_URL
+            Value: !Sub https://${ECSDeployment.Outputs.ServiceEndpoint}
+          - Name: SERVICE_PORT
+            Value: '443'
+      Source:
+        Type: NO_SOURCE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            build:
+              commands:
+                - cd /opt/phoenix-magic-8-ball-microservice-tests/phoenix-magic-8-ball-microservice-tests
+                - mvn verify -Dtests=docker
+      VpcConfig:
+        VpcId: !GetAtt VpcId.Value
+        Subnets: !Split [ ',', !GetAtt PrivateSubnets.Value ]
+        SecurityGroupIds:
+          - !GetAtt DefaultSecurityGroup.Value
+
+  SubsystemTest:
+    Type: AWS::CodeBuild::Project
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W32
+            reason: If no EncryptionKey value is specified, CodeBuild uses the default CMK for S3.
+    Properties:
+      Name: !Sub ${Environment}-${TestJob}
+      Description: Subsystem tests for phoenix-magic-8-ball-microservice
+      ServiceRole: !GetAtt ECSDeployment.Outputs.AcceptanceTestRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: !Sub 704685811864.dkr.ecr.us-east-1.amazonaws.com/phoenix-magic-8-ball-microservice:${ImageTag}-test
+        ImagePullCredentialsType: SERVICE_ROLE
+        EnvironmentVariables:
+          - Name: SERVICE_URL
+            Value: !Sub https://${ECSDeployment.Outputs.ServiceEndpoint}
+          - Name: SERVICE_PORT
+            Value: '443'
+      Source:
+        Type: NO_SOURCE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            build:
+              commands:
+                - cd /opt/phoenix-magic-8-ball-microservice-tests/phoenix-magic-8-ball-microservice-tests
+                - mvn verify -Dtests=subsystem
+      VpcConfig:
+        VpcId: !GetAtt VpcId.Value
+        Subnets: !Split [ ',', !GetAtt PrivateSubnets.Value ]
+        SecurityGroupIds:
+          - !GetAtt DefaultSecurityGroup.Value

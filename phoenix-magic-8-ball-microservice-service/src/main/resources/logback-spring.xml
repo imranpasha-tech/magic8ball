@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <springProperty scope="context" name="service_name" source="info.application.name"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <springProfile name="!local">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"log_type":"APPLICATION"}</customFields>
+            </encoder>
+        </springProfile>
+        <springProfile name="local">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>
+                    ${CONSOLE_LOG_PATTERN}
+                </Pattern>
+            </layout>
+        </springProfile>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
