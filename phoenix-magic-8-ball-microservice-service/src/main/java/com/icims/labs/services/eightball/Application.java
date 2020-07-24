@@ -26,6 +26,8 @@ public class Application {
    * Entry point method for Service.
    *
    * @param args the command line arguments
+   * 
+   * Added new comments
    */
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
