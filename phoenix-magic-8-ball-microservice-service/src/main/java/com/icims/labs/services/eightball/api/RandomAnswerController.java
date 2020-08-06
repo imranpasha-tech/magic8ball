@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Hello World controller for integration testing.
+ * Random answers controller for integration testing.
  * 
  * @author imran.pasha
  */
@@ -36,7 +36,7 @@ public class RandomAnswerController {
 	}
 	
 	
-	//Find the answer for the question from the set of answers.
+	//Find the answer for the question from the set of predefined answers.
 	@PostMapping("/answer")
 	public Map<String, String> randomAnswer(@RequestBody String question) {
 		logger.info("Fetching a random answer.");
