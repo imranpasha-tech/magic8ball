@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class RandomAnswerController {
 	private static final Logger logger = LoggerFactory.getLogger(RandomAnswerController.class);
-	
-	
+
 	// dummy service
 	@GetMapping("/helloworld")
 	public Map<String, String> helloWorld() {
@@ -34,34 +33,27 @@ public class RandomAnswerController {
 
 		return helloWorld;
 	}
-	
-	
-	//Find the answer for the question from the set of predefined answers.
+
+	// Find the answer for the question from the set of predefined answers.
 	@PostMapping("/answer")
 	public Map<String, String> randomAnswer(@RequestBody String question) {
 		logger.info("Fetching a random answer.");
-		
+
 		Map<String, String> answer = new HashMap<String, String>();
 		answer.put("answer", getRandomAnswer());
-		
+
 		return answer;
 	}
-	
+
 	/**
 	 * Utility method that gives random answers.
 	 * 
 	 * @return String
 	 */
 	private String getRandomAnswer() {
-	    String[] answers = {
-	            "Most Likely",
-	            "As I see it yes",
-	            "Outlook Good",
-	            "Looking like no",
-	            "Very doubtful",
-	            "Reply hazy, try again"
-	    };
-	    String randomAnswer = answers[(new Random()).nextInt(answers.length)];
-	    return randomAnswer;
+		String[] answers = { "Most Likely", "As I see it yes", "Outlook Good", "Looking like no", "Very doubtful",
+				"Reply hazy, try again" };
+		String randomAnswer = answers[(new Random()).nextInt(answers.length)];
+		return randomAnswer;
 	}
 }

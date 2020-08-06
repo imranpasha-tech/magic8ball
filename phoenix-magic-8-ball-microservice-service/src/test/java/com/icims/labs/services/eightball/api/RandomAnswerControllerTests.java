@@ -21,34 +21,28 @@ public class RandomAnswerControllerTests {
 
 	@Test
 	public void receiveStringResultWhenServiceIsInvoked() throws Exception {
-		mockMvc.perform(get("/api/helloworld"))
-				.andExpect(jsonPath("$.pheonix").value("Hello World from Phoenix!!!"));
+		mockMvc.perform(get("/api/helloworld")).andExpect(jsonPath("$.pheonix").value("Hello World from Phoenix!!!"));
 	}
-	
+
 	@Test
 	public void verifyResponseStatusWhenRequestMethodIsGet() throws Exception {
-		mockMvc.perform(get("/api/helloworld"))
-				.andExpect(status().isOk());
+		mockMvc.perform(get("/api/helloworld")).andExpect(status().isOk());
 	}
-	
+
 	@Test
 	public void verifyResponseStatusWhenRequestMethodIsPost() throws Exception {
-		mockMvc.perform(post("/api/helloworld"))
-				.andExpect(status().is4xxClientError());
+		mockMvc.perform(post("/api/helloworld")).andExpect(status().is4xxClientError());
 	}
-	
+
 	@Test
 	public void verifyStringResultWhenRandomAnswerServiceIsInvoked() throws Exception {
-		mockMvc.perform(post("/api/answer").content("{\"question\":\"Will it rain?\" }"))
-				.andExpect(status().isOk())
+		mockMvc.perform(post("/api/answer").content("{\"question\":\"Will it rain?\" }")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.answer").isString());
 	}
-	
+
 	@Test
 	public void verifyResponseStatusWhenRandomAnswerIsInvokedViaGet() throws Exception {
-		mockMvc.perform(get("/api/answer"))
-				.andExpect(status().is4xxClientError());
+		mockMvc.perform(get("/api/answer")).andExpect(status().is4xxClientError());
 	}
-	
-	
+
 }
