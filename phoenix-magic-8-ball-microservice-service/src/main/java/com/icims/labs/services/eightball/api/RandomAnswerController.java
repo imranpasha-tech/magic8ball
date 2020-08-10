@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.icims.labs.services.eightball.service.RandomAnswerService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * Random answers controller for integration testing.
  * 
@@ -23,6 +28,7 @@ import com.icims.labs.services.eightball.service.RandomAnswerService;
  */
 @RestController
 @RequestMapping("/api")
+@Api(value = "Simple random answers resource")
 public class RandomAnswerController {
 	private static final Logger logger = LoggerFactory.getLogger(RandomAnswerController.class);
 
@@ -31,6 +37,7 @@ public class RandomAnswerController {
 
 	// Dummy service
 	@GetMapping("/helloworld")
+	@ApiOperation(value = "Dummy hello world service")
 	public Map<String, String> helloWorld() {
 		logger.info("Successfully received request for HelloWorld.");
 
@@ -39,7 +46,11 @@ public class RandomAnswerController {
 
 		return helloWorld;
 	}
-
+	
+	@ApiOperation(value = "returns a random answer")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "OK")
+	})
 	@PostMapping("/answer")
 	public Map<String, String> randomAnswer(@RequestBody String question) {
 		logger.info("Fetching a random answer...");
