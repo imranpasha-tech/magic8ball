@@ -6,12 +6,15 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.icims.labs.services.eightball.service.RandomAnswerService;
 
 /**
  * Random answers controller for integration testing.
@@ -23,7 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RandomAnswerController {
 	private static final Logger logger = LoggerFactory.getLogger(RandomAnswerController.class);
 
-	// dummy service
+	@Autowired
+	private RandomAnswerService randomAnsService;
+
+	// Dummy service
 	@GetMapping("/helloworld")
 	public Map<String, String> helloWorld() {
 		logger.info("Successfully received request for HelloWorld.");
@@ -34,26 +40,13 @@ public class RandomAnswerController {
 		return helloWorld;
 	}
 
-	// Find the answer for the question from the set of predefined answers.
 	@PostMapping("/answer")
 	public Map<String, String> randomAnswer(@RequestBody String question) {
-		logger.info("Fetching a random answer.");
+		logger.info("Fetching a random answer...");
 
 		Map<String, String> answer = new HashMap<String, String>();
-		answer.put("answer", getRandomAnswer());
+		answer.put("answer", randomAnsService.getRandomAnswer());
 
 		return answer;
-	}
-
-	/**
-	 * Utility method that gives random answers.
-	 * 
-	 * @return String
-	 */
-	private String getRandomAnswer() {
-		String[] answers = { "Most Likely", "As I see it yes", "Outlook Good", "Looking like no", "Very doubtful",
-				"Reply hazy, try again" };
-		String randomAnswer = answers[(new Random()).nextInt(answers.length)];
-		return randomAnswer;
 	}
 }
