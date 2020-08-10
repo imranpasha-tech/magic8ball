@@ -41,7 +41,7 @@ public class RandomAnswerController {
 	public Map<String, String> helloWorld() {
 		logger.info("Successfully received request for HelloWorld.");
 
-		Map<String, String> helloWorld = new HashMap<String, String>();
+		Map<String, String> helloWorld = new HashMap<>();
 		helloWorld.put("pheonix", "Hello World from Phoenix!!!");
 
 		return helloWorld;
@@ -55,7 +55,7 @@ public class RandomAnswerController {
 	public Map<String, String> randomAnswer(@RequestBody String question) {
 		logger.info("Fetching a random answer...");
 
-		Map<String, String> answer = new HashMap<String, String>();
+		Map<String, String> answer = new HashMap<>();
 		answer.put("answer", randomAnsService.getRandomAnswer());
 
 		return answer;

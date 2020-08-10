@@ -9,8 +9,7 @@ import com.icims.labs.services.eightball.api.RandomAnswerController;
 
 @Service
 public class RandomAnswerService {
-	private static final Logger logger = LoggerFactory.getLogger(RandomAnswerController.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(RandomAnswerService.class);
 	
 	/**
 	 * Service method that selects a random mocked answer.
@@ -28,7 +27,7 @@ public class RandomAnswerService {
 				};
 		String randomAnswer = answers[(new Random()).nextInt(answers.length)];
 		
-		logger.info("Random answer is fetched: " + randomAnswer);
+		logger.info("Random answer is fetched: {}", randomAnswer);
 		
 		return randomAnswer;
 	}
