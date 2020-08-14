@@ -1,9 +1,11 @@
 package com.icims.labs.services.eightball.api;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
+import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.model.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +13,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.icims.labs.services.eightball.service.RandomAnswerService;
+import com.icims.labs.services.eightball.service.Magic8BallService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import javax.validation.Valid;
 
 /**
  * Random answers controller for integration testing.
@@ -29,11 +32,11 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/api")
 @Api(value = "Simple random answers resource")
-public class RandomAnswerController {
-	private static final Logger logger = LoggerFactory.getLogger(RandomAnswerController.class);
+public class Magic8BallController {
+	private static final Logger logger = LoggerFactory.getLogger(Magic8BallController.class);
 
 	@Autowired
-	private RandomAnswerService randomAnsService;
+	private Magic8BallService magic8BallService;
 
 	// Dummy service
 	@GetMapping("/helloworld")
@@ -52,12 +55,14 @@ public class RandomAnswerController {
 		@ApiResponse(code = 200, message = "OK")
 	})
 	@PostMapping("/answer")
-	public Map<String, String> randomAnswer(@RequestBody String question) {
+	public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
 		logger.info("Fetching a random answer...");
-
 		Map<String, String> answer = new HashMap<>();
-		answer.put("answer", randomAnsService.getRandomAnswer());
-
+		answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
 		return answer;
+	}
+	@GetMapping("/history")
+	public List<History> getHistory() {
+		return magic8BallService.getHistory();
 	}
 }

@@ -36,6 +36,37 @@ Resources:
     Properties:
       RetentionInDays: 30
 
+  RdsCluster:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Parameter: !Sub /${Environment}/rds/microservices
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-parameter
+
+  ClusterPassword:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Parameter: !Sub /${Environment}/rds/microservices/password
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-parameter
+
+  SchemaPassword:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-secret
+
+  RuntimePassword:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-ssm-secret
+
+  PostgresDatabase:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Cluster: !GetAtt RdsCluster.Value
+      ClusterPassword: !GetAtt ClusterPassword.Value
+      UpdaterPassword: !GetAtt SchemaPassword.Value
+      RuntimePassword: !GetAtt RuntimePassword.Value
+      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-cr-rds-postgres
+
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
