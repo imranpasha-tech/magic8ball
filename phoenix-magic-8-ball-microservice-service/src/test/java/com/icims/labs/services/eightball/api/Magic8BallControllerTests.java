@@ -5,6 +5,7 @@ import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.Magic8BallService;
+import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +73,7 @@ public class Magic8BallControllerTests {
 
     @Test
     public void verifyResultWhenHistoryServiceIsInvoked() throws Exception {
-        List<History> history = new ArrayList<>();
-        history.add(History.builder().question("Will it rain?").build());
-        when(magic8BallService.getHistory()).thenReturn(history);
+        when(magic8BallService.getHistory()).thenReturn(TestUtils.buildHistory());
 
         mockMvc.perform(get("/api/history"))
                 .andExpect(status().isOk());
