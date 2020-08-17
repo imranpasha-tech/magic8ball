@@ -3,6 +3,7 @@ info:
     name: '@service.name@'
     description: '@project.description@'
     version: '@project.version@'
+
 server:
   port: 8080
 
@@ -13,10 +14,12 @@ spring:
     username: postgres
     password: root
 
+flyway:
   url: '@spring.datasource.url@'
   user: '@spring.datasource.username@'
   password: '@spring.datasource.password@'
-  locations: classpath:/database
+  locations: classpath:db/migration
+
   jpa:
     hibernate:
       ddl-auto: none
