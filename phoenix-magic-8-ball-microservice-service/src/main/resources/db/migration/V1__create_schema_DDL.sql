@@ -1,7 +1,6 @@
 CREATE TABLE magic_eight_ball_languages(
     locale VARCHAR(8) NOT NULL,
-    name VARCHAR (24) NOT NULL,
-    PRIMARY KEY (id)
+    name VARCHAR (24) NOT NULL
 ) WITH (
     OIDS = FALSE
 ) TABLESPACE pg_default;

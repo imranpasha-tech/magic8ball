@@ -61,6 +61,7 @@ public class Magic8BallController {
 		answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
 		return answer;
 	}
+	@ApiOperation(value = "returns history of user")
 	@GetMapping("/history")
 	public List<History> getHistory() {
 		return magic8BallService.getHistory();
