@@ -1,6 +1,7 @@
 package com.icims.labs.services.eightball.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.Magic8BallService;
@@ -12,6 +13,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,6 +68,17 @@ public class Magic8BallControllerTests {
                 .content(new ObjectMapper().writeValueAsString(buildMockUserRequest())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.answer").isString());
+    }
+
+    @Test
+    public void verifyResultWhenHistoryServiceIsInvoked() throws Exception {
+        List<History> history = new ArrayList<>();
+        history.add(History.builder().question("Will it rain?").build());
+        when(magic8BallService.getHistory()).thenReturn(history);
+
+        mockMvc.perform(get("/api/history"))
+                .andExpect(status().isOk());
+
     }
 
     @Test
