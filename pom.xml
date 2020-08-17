@@ -34,6 +34,7 @@
 		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
 		<postgresql.version>42.2.9</postgresql.version>
 		<lombok.version>1.18.12</lombok.version>
+		<flyway.version>6.4.4</flyway.version>
 	</properties>
 
 	<dependencyManagement>
