@@ -1,6 +1,7 @@
 package com.icims.labs.services.eightball.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -18,8 +19,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icims.labs.services.eightball.dto.Answers;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
@@ -40,6 +44,9 @@ public class Magic8BallControllerIT {
 	
 	@Autowired 
 	private Magic8BallRepo repo; 
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@Before
 	public void init() {
@@ -64,10 +71,56 @@ public class Magic8BallControllerIT {
 					.andDo(print())
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.answer").isString());
-		
 	}
 	
-	public static UserRequest buildMockUserRequest() {
+	@Test
+	public void randomAnswerFetchedResponseIsNotEmpty() throws Exception {
+		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(buildMockUserRequest())))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.answer").isNotEmpty());
+	}
+	
+	@Test
+	public void randomAnswerFetchedResponseIsValidString() throws Exception {
+		MvcResult result = mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(buildMockUserRequest())))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonNode resultNode = objectMapper.readTree(result.getResponse().getContentAsString());
+		String answer = resultNode.get("answer").asText();
+		
+		Assertions.assertThat(answer).isNotEqualTo("");
+	}
+	
+	@Test
+	public void randomAnswerFetchedResponseIsOneOfTheValidAnswers() throws Exception {
+		MvcResult result = mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(buildMockUserRequest())))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		JsonNode resultNode = objectMapper.readTree(result.getResponse().getContentAsString());
+		String answer = resultNode.get("answer").asText();
+		
+		assertTrue(checkEnumAnswers(answer));
+	}
+	
+	private boolean checkEnumAnswers(String answer) {
+		for (Answers ans: Answers.values()) {
+			if (ans.getAnswerKey().equals(answer)) {
+				System.out.println("Answers keys: " + ans.getAnswerKey());
+				return true;
+			}		
+		}
+		return false;
+	} 
+	
+	private static UserRequest buildMockUserRequest() {
         Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
         return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
     }
