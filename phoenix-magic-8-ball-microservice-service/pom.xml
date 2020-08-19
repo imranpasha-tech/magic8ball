@@ -19,7 +19,10 @@
 
 	<properties>
 		<sonar.coverage.exclusions>
-			src/main/java/com/icims/labs/services/eightball/Application.java
+			src/main/java/com/icims/labs/services/eightball/Application.java,
+			src/main/java/com/icims/labs/services/eightball/entity/*,
+			src/main/java/com/icims/labs/services/eightball/model/*,
+
 		</sonar.coverage.exclusions>
 	</properties>
 
