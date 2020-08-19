@@ -1,4 +1,4 @@
-package com.icims.labs.services.eightball.dto;
+package com.icims.labs.services.eightball.enums;
 
 
 public enum Answers {

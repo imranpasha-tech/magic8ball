@@ -4,6 +4,7 @@ import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,5 +19,13 @@ public class TestUtils {
     public static UserRequest buildMockUserRequest() {
         Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
         return UserRequest.builder().question("Will it rain ?").userId("").language(language).build();
+    }
+
+    public static History buildQuestionHistory(UserRequest userRequest) {
+        return History.builder().question(userRequest.getQuestion())
+                .frequency(1)
+                .languageCode(userRequest.getLanguage().getCode())
+                .createdDate(LocalDateTime.now())
+                .build();
     }
 }

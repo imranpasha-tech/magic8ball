@@ -1,7 +1,7 @@
 package com.icims.labs.services.eightball.service;
 
 import com.icims.labs.services.eightball.entity.History;
-import com.icims.labs.services.eightball.dto.Answers;
+import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import org.slf4j.Logger;
