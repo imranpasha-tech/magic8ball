@@ -25,11 +25,15 @@ public class Magic8BallServiceTests {
 
     @Test
     public void verifyStringResultWhenGetRandomAnswerIsCalled() {
+        Mockito.when(magic8BallRepository.save(TestUtils.buildQuestionHistory(TestUtils.buildMockUserRequest())))
+                .thenReturn(TestUtils.buildQuestionHistory(TestUtils.buildMockUserRequest()));
         Assert.assertNotNull(magic8BallService.getRandomAnswer(TestUtils.buildMockUserRequest()));
     }
 
     @Test
     public void verifyResultWhenGetHistoryIsCalled() {
+        Mockito.when(magic8BallRepository.save(TestUtils.buildQuestionHistory(TestUtils.buildMockUserRequest())))
+                .thenReturn(TestUtils.buildQuestionHistory(TestUtils.buildMockUserRequest()));
         Mockito.when(magic8BallRepository.findAll())
                 .thenReturn(TestUtils.buildHistory());
         magic8BallService.getRandomAnswer(TestUtils.buildMockUserRequest());
