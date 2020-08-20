@@ -39,15 +39,16 @@ public enum Answers {
     public static String getAnswerByValue(final Integer value)
     {
     	String responseAnswer=null;
+    	String response="try_later";
     	if(value != null)
     	{
     		switch(value)
     		{
     		case 1:
-    			responseAnswer = "try_later";
+    			responseAnswer = response;
     			break;
     		default :
-    			responseAnswer = "try_later";
+    			responseAnswer = response;
     		}
     	}
     	else

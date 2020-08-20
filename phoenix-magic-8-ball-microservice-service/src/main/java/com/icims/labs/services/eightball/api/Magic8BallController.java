@@ -35,7 +35,7 @@ import javax.validation.Valid;
 @Api(value = "Simple random answers resource")
 public class Magic8BallController {
 	private static final Logger logger = LoggerFactory.getLogger(Magic8BallController.class);
-
+   
 	@Autowired
 	private Magic8BallService magic8BallService;
 
@@ -51,31 +51,33 @@ public class Magic8BallController {
 		return helloWorld;
 	}
 
+	/*
+	 * validate ? on request validate request lenght max 120 characters if request
+	 * has only ? ,response should be ! if request has upper/lower/mix ,store all
+	 * them in lower case for "trending/history"
+	 *
+	 *
+	 */
 	@ApiOperation(value = "returns a random answer")
 	@ApiResponses({ @ApiResponse(code = 200, message = "OK") })
 	@PostMapping("/answer")
 	public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
 		logger.info("Fetching a random answer...");
-		/*
-		 * validate ? on request validate request lenght max 120 characters if request
-		 * has only ? ,response should be ! if request has upper/lower/mix ,store all
-		 * them in lower case for "trending/history"
-		 *
-		 *
-		 */
+		
 		Map<String, String> answer = new HashMap<>();
+		String responseKey="answer";
 		try {
 			if (userRequest != null) {
 				String question = userRequest.getQuestion();
 				if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
-					answer.put("answer", "!");
+					answer.put(responseKey, "!");
 					return answer;
 				}
 				if (question.endsWith("?") && question.length() <= 120) {
-					answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
+					answer.put(responseKey, magic8BallService.getRandomAnswer(userRequest));
 					return answer;
 				} else {
-					answer.put("answer", Answers.getAnswerByValue(21));
+					answer.put(responseKey, Answers.getAnswerByValue(21));
 					return answer;
 				}
 			}
