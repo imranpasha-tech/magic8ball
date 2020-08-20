@@ -50,52 +50,43 @@ public class Magic8BallController {
 
 		return helloWorld;
 	}
-	
+
 	@ApiOperation(value = "returns a random answer")
-	@ApiResponses({
-		@ApiResponse(code = 200, message = "OK")
-	})
+	@ApiResponses({ @ApiResponse(code = 200, message = "OK") })
 	@PostMapping("/answer")
 	public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
 		logger.info("Fetching a random answer...");
 		/*
-		 * validate ? on request 
-		 *validate request lenght max 120 characters
-		 *if request has only ? ,response should be ! 
-		 *if request has upper/lower/mix ,store all them in lower case for "trending/history"
+		 * validate ? on request validate request lenght max 120 characters if request
+		 * has only ? ,response should be ! if request has upper/lower/mix ,store all
+		 * them in lower case for "trending/history"
 		 *
 		 *
 		 */
 		Map<String, String> answer = new HashMap<>();
-		try
-		{
-			if(userRequest != null)
-			{
-				String question=userRequest.getQuestion();
-				if(question.trim().length()==1 && question.trim().contentEquals("?"))
-				{
-					answer.put("answer","!");
+		try {
+			if (userRequest != null) {
+				String question = userRequest.getQuestion();
+				if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
+					answer.put("answer", "!");
 					return answer;
 				}
-				if(question.endsWith("?") && question.length()<=120)
-				{
+				if (question.endsWith("?") && question.length() <= 120) {
 					answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
-					return answer;	
-				}
-				else {
+					return answer;
+				} else {
 					answer.put("answer", Answers.getAnswerByValue(21));
 					return answer;
 				}
 			}
-			
-		}
-		catch(Exception e)
-		{
+
+		} catch (Exception e) {
 			logger.error("Exception is raised during /api/answer api processing ", e);
 		}
 		return answer;
-		
+
 	}
+
 	@ApiOperation(value = "returns history of user")
 	@GetMapping("/history")
 	public List<History> getHistory() {

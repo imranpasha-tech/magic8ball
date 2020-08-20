@@ -100,15 +100,32 @@ public class Magic8BallControllerTests {
     	.andExpect(jsonPath("$.answer").value("!"));
     }
     
-  /*  @Test
+  @Test
     public void responseAnswerWhenPayloadEndsWithQuestionMark() throws Exception
     {
     	when(magic8BallService.getRandomAnswer(buildMockUserRequest())).thenReturn("It is likely");
     	
     	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
-    			.content("{\"question\":\"Will it rain today ?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
-    	        .andExpect(status().isOk())
-    	        .andExpect(jsonPath("$.answer").isString());
+    			.content("{\"question\":\"Will it rain today\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+    	        .andExpect(status().isOk());
+    	        
     }
-    */
+   
+  @Test
+  public void responseAnswerWhenPayLoadContainsNull() throws Exception
+  {
+  	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+  			.content("{\"question\":null,\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+  	.andExpect(status().isOk());
+  	
+  }
+  
+  @Test
+  public void responseAnswerWhenPayLoadContainsToomuchLength() throws Exception
+  {
+  	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+  			.content("{\"question\":\"Will it rain todayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+  	.andExpect(status().isOk());
+  	
+  }
 }
