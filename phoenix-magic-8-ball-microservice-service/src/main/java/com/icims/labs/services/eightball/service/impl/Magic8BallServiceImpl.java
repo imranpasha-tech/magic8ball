@@ -1,9 +1,11 @@
-package com.icims.labs.services.eightball.service;
+package com.icims.labs.services.eightball.service.impl;
 
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
+import com.icims.labs.services.eightball.service.Magic8BallService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

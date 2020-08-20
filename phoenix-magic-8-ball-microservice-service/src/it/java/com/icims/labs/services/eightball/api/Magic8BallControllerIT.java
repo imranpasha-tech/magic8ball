@@ -8,6 +8,8 @@ import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
+import com.icims.labs.services.eightball.service.Magic8BallService;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -43,8 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
+ * This class performs isolated functional testing of {@link Magic8BallController} and {@link Magic8BallService}
  * 
- * @author imran.pasha
+ * @author imran.pasha {@literal ipasha@icims.com}
  *
  */
 @ExtendWith(SpringExtension.class)
