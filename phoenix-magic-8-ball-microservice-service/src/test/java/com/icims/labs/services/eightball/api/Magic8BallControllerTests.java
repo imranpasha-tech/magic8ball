@@ -37,21 +37,6 @@ public class Magic8BallControllerTests {
 
 
     @Test
-    public void receiveStringResultWhenServiceIsInvoked() throws Exception {
-        mockMvc.perform(get("/api/helloworld")).andExpect(jsonPath("$.pheonix").value("Hello World from Phoenix!!!"));
-    }
-
-    @Test
-    public void verifyResponseStatusWhenRequestMethodIsGet() throws Exception {
-        mockMvc.perform(get("/api/helloworld")).andExpect(status().isOk());
-    }
-
-    @Test
-    public void verifyResponseStatusWhenRequestMethodIsPost() throws Exception {
-        mockMvc.perform(post("/api/helloworld")).andExpect(status().is4xxClientError());
-    }
-
-    @Test
     public void verifyStringResultWhenRandomAnswerServiceIsInvoked() throws Exception {
         when(magic8BallService.getRandomAnswer(buildMockUserRequest())).thenReturn("It is likely");
 

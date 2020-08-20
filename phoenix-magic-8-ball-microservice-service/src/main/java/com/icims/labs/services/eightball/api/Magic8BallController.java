@@ -26,44 +26,33 @@ import javax.validation.Valid;
 
 /**
  * Random answers controller for integration testing.
- * 
+ *
  * @author imran.pasha
  */
 @RestController
 @RequestMapping("/api")
 @Api(value = "Simple random answers resource")
 public class Magic8BallController {
-	private static final Logger logger = LoggerFactory.getLogger(Magic8BallController.class);
+    private static final Logger logger = LoggerFactory.getLogger(Magic8BallController.class);
 
-	@Autowired
-	private Magic8BallService magic8BallService;
+    @Autowired
+    private Magic8BallService magic8BallService;
 
-	// Dummy service
-	@GetMapping("/helloworld")
-	@ApiOperation(value = "Dummy hello world service")
-	public Map<String, String> helloWorld() {
-		logger.info("Successfully received request for HelloWorld.");
+    @ApiOperation(value = "returns a random answer")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK")
+    })
+    @PostMapping("/answer")
+    public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
+        logger.info("Fetching a random answer...");
+        Map<String, String> answer = new HashMap<>();
+        answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
+        return answer;
+    }
 
-		Map<String, String> helloWorld = new HashMap<>();
-		helloWorld.put("pheonix", "Hello World from Phoenix!!!");
-
-		return helloWorld;
-	}
-	
-	@ApiOperation(value = "returns a random answer")
-	@ApiResponses({
-		@ApiResponse(code = 200, message = "OK")
-	})
-	@PostMapping("/answer")
-	public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
-		logger.info("Fetching a random answer...");
-		Map<String, String> answer = new HashMap<>();
-		answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
-		return answer;
-	}
-	@ApiOperation(value = "returns history of user")
-	@GetMapping("/history")
-	public List<History> getHistory() {
-		return magic8BallService.getHistory();
-	}
+    @ApiOperation(value = "returns history of user")
+    @GetMapping("/history")
+    public List<History> getHistory() {
+        return magic8BallService.getHistory();
+    }
 }
