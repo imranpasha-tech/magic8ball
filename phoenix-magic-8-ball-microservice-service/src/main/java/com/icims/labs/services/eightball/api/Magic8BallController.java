@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.icims.labs.services.eightball.dto.Answers;
 import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
