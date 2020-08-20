@@ -8,6 +8,7 @@ package com.icims.labs.services.eightball;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Entry point class for Service.
@@ -21,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author iCIMS Labs {@literal <labs@icims.com>}
  */
 @SpringBootApplication
+@EnableTransactionManagement
 public class Application {
   /**
    * Entry point method for Service.
