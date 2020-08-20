@@ -5,6 +5,7 @@ import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import com.icims.labs.services.eightball.service.Magic8BallService;
+import com.icims.labs.services.eightball.service.Magic8BallServiceImpl;
 import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +24,7 @@ import java.util.List;
 public class Magic8BallServiceTests {
 
     @InjectMocks
-    private Magic8BallService magic8BallService ;
+    private Magic8BallServiceImpl magic8BallService;
 
     @Mock
     private Magic8BallRepository magic8BallRepository;
@@ -55,6 +56,4 @@ public class Magic8BallServiceTests {
         Assert.assertNotNull(magic8BallService.getHistory());
         Assert.assertNotNull(magic8BallService.getHistory().size());
     }
-
-
 }

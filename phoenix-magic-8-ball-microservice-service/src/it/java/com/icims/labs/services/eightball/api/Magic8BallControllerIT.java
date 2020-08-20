@@ -2,6 +2,7 @@ package com.icims.labs.services.eightball.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icims.labs.services.eightball.api.utility.Magic8BallRepo;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.Language;
@@ -151,7 +152,3 @@ public class Magic8BallControllerIT {
 	}
 }
 
-interface Magic8BallRepo extends Magic8BallRepository {
-	@Query("SELECT m8 FROM History m8 WHERE m8.question =:question")
-	List<History> findByQuestion(@Param("question") String question);
-}
