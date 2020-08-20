@@ -1,5 +1,6 @@
 package com.icims.labs.services.eightball.api;
 
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.Language;
@@ -88,5 +89,23 @@ public class Magic8BallControllerTests {
     public static UserRequest buildMockUserRequest() {
         Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
         return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
+    }
+    
+    @Test
+    public void responseAnswerWhenPayLoadContainsOnlyQuestionMark() throws Exception
+    {
+    	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+    			.content("{\"question\":\"?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+    	.andExpect(status().isOk())
+    	.andExpect(jsonPath("$.answer").value("!"));
+    }
+    
+    @Test
+    public void responseAnswerWhenPayloadEndsWithQuestionMark() throws Exception
+    {
+    	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+    			.content("{\"question\":\"Will it rain today ?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+    	        .andExpect(status().isOk())
+    	        .andExpect(jsonPath("$.answer").isString());
     }
 }
