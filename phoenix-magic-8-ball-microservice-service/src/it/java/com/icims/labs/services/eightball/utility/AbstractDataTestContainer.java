@@ -10,6 +10,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+/**
+ * Postgres Test container initializer used for all types of tests
+ * 
+ * @author imran.pasha {@literal ipasha@icims.com}
+ *
+ */
 @Testcontainers
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @ContextConfiguration(initializers = { AbstractDataTestContainer.Initializer.class })

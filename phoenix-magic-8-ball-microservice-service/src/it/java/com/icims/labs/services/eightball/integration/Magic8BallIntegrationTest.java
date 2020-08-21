@@ -13,9 +13,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import com.icims.labs.services.eightball.utility.AbstractDataTestContainer;
 import com.icims.labs.services.eightball.utility.Magic8BallRepo;
 
+
+/**
+ * Integration tests for {@link Magic8BallRepository}
+ * 
+ * @author imran.pasha {@literal ipasha@icims.co
+ *
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
