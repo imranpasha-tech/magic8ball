@@ -7,6 +7,7 @@ import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.Magic8BallService;
+import com.icims.labs.services.eightball.utility.AbstractDataTestContainer;
 import com.icims.labs.services.eightball.utility.Magic8BallRepo;
 
 import org.assertj.core.api.Assertions;
@@ -46,13 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  */
 @ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@ContextConfiguration(initializers = { Magic8BallControllerIT.Initializer.class })
-@Testcontainers
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class Magic8BallControllerIT {
+public class Magic8BallControllerIT extends AbstractDataTestContainer{
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,22 +66,7 @@ public class Magic8BallControllerIT {
 		repo.deleteAll();
 		assertThat(repo.count()).isZero();
 	}
-
-	@ClassRule
-	public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
-			.withDatabaseName("phoenix_magic_8_ball").withUsername("postgres").withPassword("root");
-
-	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-			TestPropertyValues
-					.of("spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-							"spring.datasource.username=" + postgreSQLContainer.getUsername(),
-							"spring.datasource.password=" + postgreSQLContainer.getPassword())
-					.applyTo(configurableApplicationContext.getEnvironment());
-		}
-	}
-	
-	
+		
 	@Test
 	public void randomAnswerFetchedWhenSuccessful() throws Exception {
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
