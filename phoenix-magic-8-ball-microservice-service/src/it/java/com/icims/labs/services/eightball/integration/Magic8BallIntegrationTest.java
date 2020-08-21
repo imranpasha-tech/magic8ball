@@ -1,8 +1,11 @@
 package com.icims.labs.services.eightball.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDateTime;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,12 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 
 	@Autowired
 	private Magic8BallRepo repo;
+	
+	@Before
+	public void init() {
+		repo.deleteAll();
+		assertThat(repo.count()).isZero();
+	}
 
 	@Test
 	public void persistFailsWhenQuestionLengthIsOver120() {
