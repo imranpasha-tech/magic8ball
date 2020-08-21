@@ -3,11 +3,9 @@ package com.icims.labs.services.eightball.functional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icims.labs.services.eightball.api.Magic8BallController;
-import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
-import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import com.icims.labs.services.eightball.service.Magic8BallService;
 import com.icims.labs.services.eightball.utility.Magic8BallRepo;
 
@@ -25,8 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,8 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
