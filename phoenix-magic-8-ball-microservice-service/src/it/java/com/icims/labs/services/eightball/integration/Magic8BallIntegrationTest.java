@@ -21,7 +21,7 @@ import com.icims.labs.services.eightball.utility.Magic8BallRepo;
 /**
  * Integration tests for {@link Magic8BallRepository}
  * 
- * @author imran.pasha {@literal ipasha@icims.co
+ * @author imran.pasha {@literal ipasha@icims.com}
  *
  */
 @RunWith(SpringRunner.class)
