@@ -5,16 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.icims.labs.services.eightball.entity.History;
-import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.icims.labs.services.eightball.service.Magic8BallService;
 
@@ -50,48 +45,29 @@ public class Magic8BallController {
 
 		return helloWorld;
 	}
-
-	/*
-	 * validate ? on request validate request lenght max 120 characters if request
-	 * has only ? ,response should be ! if request has upper/lower/mix ,store all
-	 * them in lower case for "trending/history"
-	 *
-	 *
-	 */
+	
 	@ApiOperation(value = "returns a random answer")
-	@ApiResponses({ @ApiResponse(code = 200, message = "OK") })
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "OK")
+	})
 	@PostMapping("/answer")
 	public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
 		logger.info("Fetching a random answer...");
-
 		Map<String, String> answer = new HashMap<>();
-		String responseKey="answer";
-		try {
-			if (userRequest != null) {
-				String question = userRequest.getQuestion();
-				if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
-					answer.put(responseKey, "!");
-					return answer;
-				}
-				if (question.endsWith("?") && question.length() <= 120) {
-					answer.put(responseKey, magic8BallService.getRandomAnswer(userRequest));
-					return answer;
-				} else {
-					answer.put(responseKey, Answers.getAnswerByValue(21));
-					return answer;
-				}
-			}
-
-		} catch (Exception e) {
-			logger.error("Exception is raised during /api/answer api processing ", e);
-		}
+		answer.put("answer", magic8BallService.getRandomAnswer(userRequest));
 		return answer;
-
 	}
-
 	@ApiOperation(value = "returns history of user")
 	@GetMapping("/history")
 	public List<History> getHistory() {
 		return magic8BallService.getHistory();
 	}
+
+	@ApiOperation(value = "returns trending questions")
+	@GetMapping("/trendingQuestions")
+	public List<History> getTrendingQuestions(@RequestParam String languageCode) {
+		return magic8BallService.getTrendingQuestions(languageCode);
+	}
+
+
 }

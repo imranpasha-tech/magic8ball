@@ -22,6 +22,12 @@ public class History {
     @Column(name = "question")
     private String question;
 
+    @Column(name = "answer")
+    private String answer;
+
+    @Column(name = "truncated_question")
+    private String truncatedQuestion;
+
     @Column(name = "frequency")
     private int frequency;
 

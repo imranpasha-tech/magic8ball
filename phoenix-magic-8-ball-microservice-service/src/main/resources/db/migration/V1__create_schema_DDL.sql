@@ -12,7 +12,9 @@
 CREATE TABLE magic_eight_ball_history(
     id SERIAL PRIMARY KEY NOT NULL,
     question VARCHAR(120) NOT NULL,
+    truncated_question VARCHAR(120) NOT NULL,
     frequency integer NOT NULL,
+    answer varchar(20) NOT NULL,
     language_code VARCHAR(8) NOT NULL,
     created_date timestamp(6) not null
 ) TABLESPACE pg_default;
