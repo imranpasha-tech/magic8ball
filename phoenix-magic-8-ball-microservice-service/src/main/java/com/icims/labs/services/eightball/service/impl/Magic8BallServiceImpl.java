@@ -42,11 +42,11 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 
     private QuestionDTO buildQuestionDTO(UserRequest userRequest, String randomAnswer) {
         String truncatedQuestion = truncate(userRequest.getQuestion()).toLowerCase();
-        return QuestionDTO.builder().question(userRequest.getQuestion()).truncatedQuestion(truncatedQuestion).language_code(userRequest.getLanguage().getCode()).answer(randomAnswer).build();
+        return QuestionDTO.builder().question(userRequest.getQuestion()).truncatedQuestion(truncatedQuestion).languageCode(userRequest.getLanguage().getCode()).answer(randomAnswer).build();
     }
 
     private void saveQuestionHistory(QuestionDTO questionDTO) {
-        Optional<History> history = magic8BallRepository.findByTruncatedQuestion(questionDTO.getTruncatedQuestion(), questionDTO.getLanguage_code());
+        Optional<History> history = magic8BallRepository.findByTruncatedQuestion(questionDTO.getTruncatedQuestion(), questionDTO.getLanguageCode());
         if(history.isPresent()){
             int frequency = history.get().getFrequency();
             history.get().setFrequency(++frequency);
@@ -64,7 +64,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
     private History buildQuestionHistory(QuestionDTO questionDTO, int frequency) {
         return History.builder().question(questionDTO.getQuestion()).truncatedQuestion(questionDTO.getTruncatedQuestion())
                 .frequency(frequency)
-                .languageCode(questionDTO.getLanguage_code())
+                .languageCode(questionDTO.getLanguageCode())
                 .createdDate(LocalDateTime.now()).answer(questionDTO.getAnswer())
                 .build();
 

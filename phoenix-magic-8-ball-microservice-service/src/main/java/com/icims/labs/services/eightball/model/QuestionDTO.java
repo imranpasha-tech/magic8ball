@@ -13,5 +13,5 @@ public class QuestionDTO {
 
     String answer;
 
-    String language_code;
+    String languageCode;
 }
