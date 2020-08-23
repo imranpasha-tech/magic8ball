@@ -1,12 +1,12 @@
-package com.icims.labs.services.eightball.api.utility;
+package com.icims.labs.services.eightball.utility;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.icims.labs.services.eightball.api.Magic8BallControllerIT;
 import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.functional.Magic8BallControllerIT;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 
 /**
