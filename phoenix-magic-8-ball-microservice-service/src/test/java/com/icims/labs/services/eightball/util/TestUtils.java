@@ -12,7 +12,7 @@ public class TestUtils {
 
     public static List<History> buildHistory() {
         List<History> history = new ArrayList<>();
-        history.add(History.builder().question("Will it rain?").languageCode("en-US").createdDate(LocalDateTime.now()).build());
+        history.add(History.builder().question("Will it rain?").languageCode("en-US").createdDate(LocalDateTime.now()).frequency(3).build());
         return history;
     }
 

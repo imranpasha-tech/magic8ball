@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -55,5 +56,12 @@ public class Magic8BallServiceTests {
                 .thenReturn(historyList);
         Assert.assertNotNull(magic8BallService.getHistory());
         Assert.assertNotNull(magic8BallService.getHistory().size());
+    }
+
+    @Test
+    public void verifyResultWhenGetTrendingQuestionsIsCalled() {
+        Mockito.when(magic8BallRepository.getTrendingQuestionsByLanguage("en-US", PageRequest.of(0, 25)))
+                .thenReturn(historyList);
+        Assert.assertNotNull(magic8BallService.getTrendingQuestions("en-US"));
     }
 }
