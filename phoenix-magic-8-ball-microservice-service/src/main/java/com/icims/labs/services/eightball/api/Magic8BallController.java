@@ -27,7 +27,7 @@ import javax.validation.Valid;
 
 /**
  * Random answers controller for integration testing.
- * 
+ *
  * @author imran.pasha
  */
 @RestController
