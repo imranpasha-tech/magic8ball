@@ -59,7 +59,7 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 	}
 
 	@Test
-	public void persistSucceedsWhenAllFiledsAreValid() {
+	public void persistSucceedsWhenAllFieldsAreValid() {
 		String question = "will it snow?";
 		LocalDateTime now = LocalDateTime.now();
 
@@ -68,6 +68,19 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 
 		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
 				.hasFieldOrPropertyWithValue("question", "will it snow?").hasFieldOrPropertyWithValue("frequency", 1)
+				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now);
+	}
+	
+	@Test
+	public void persistSucceedsWhenAllFiledsAreValidAndWithoutQuestionMark() {
+		String question = "will it snow";
+		LocalDateTime now = LocalDateTime.now();
+
+		History history = History.builder().question(question).frequency(1).languageCode("en_US").createdDate(now)
+				.build();
+
+		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
+				.hasFieldOrPropertyWithValue("question", "will it snow").hasFieldOrPropertyWithValue("frequency", 1)
 				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now);
 	}
 }
