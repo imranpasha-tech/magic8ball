@@ -23,7 +23,7 @@ public enum Answers {
     SOURCES_NO_ANSWER(18, "sources_no_answer"),
     OUTLOOK_BAD_ANSWER(19, "outlook_bad_answer"),
     DOUBTFUL_ANSWER(20,"doubtful_answer"),
-    TRY_LATER_ANSWER(21,"try_later");
+    TRY_LATER_ANSWER(21,"plz_try_later");
 	
     private int answerId;
     private String answerKey;
@@ -53,7 +53,7 @@ public enum Answers {
     	}
     	else
     	{
-    		responseAnswer = "try_later";
+    		responseAnswer = response;
     	}
     	return responseAnswer;
     }
