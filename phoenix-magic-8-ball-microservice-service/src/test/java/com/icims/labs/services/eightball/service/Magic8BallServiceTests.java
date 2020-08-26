@@ -80,7 +80,7 @@ public class Magic8BallServiceTests {
     }
     
     @Test
-    public void verifyMixedSentimentIsPositive() {
+    public void verifyMixedSentimentResult() {
     	UserRequest request = UserRequest.builder().question("will I dance?").language(Language.builder().code("en").build()).build();
     	SentimentScore score = new SentimentScore();
     	score.setPositive(0.5999f);
@@ -94,4 +94,6 @@ public class Magic8BallServiceTests {
     	
     	Assertions.assertEquals("MIXED", answer.getSentimentResult().getSentiment());
     }
+    
+    
 }
