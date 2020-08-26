@@ -2,6 +2,7 @@ package com.icims.labs.services.eightball.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icims.labs.services.eightball.model.Language;
+import com.icims.labs.services.eightball.model.SentimentAnswer;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.Magic8BallService;
 import com.icims.labs.services.eightball.util.TestUtils;
@@ -34,7 +35,8 @@ public class Magic8BallControllerTests {
 
     @Test
     public void verifyStringResultWhenRandomAnswerServiceIsInvoked() throws Exception {
-        when(magic8BallService.getRandomAnswer(buildMockUserRequest())).thenReturn("It is likely");
+    	SentimentAnswer answer = SentimentAnswer.builder().answer("It is likely").build();
+        when(magic8BallService.getRandomAnswer(buildMockUserRequest())).thenReturn(answer);
 
         mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(buildMockUserRequest())))

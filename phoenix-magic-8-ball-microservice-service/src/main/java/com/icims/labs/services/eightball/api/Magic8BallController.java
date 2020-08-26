@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.enums.Answers;
+import com.icims.labs.services.eightball.model.SentimentAnswer;
 import com.icims.labs.services.eightball.model.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class Magic8BallController {
     @ApiOperation(value = "returns a random answer")
     @ApiResponses({ @ApiResponse(code = 200, message = "OK") })
     @PostMapping("/answer")
-    public Map<String, String> getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
+    public SentimentAnswer getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
         logger.info("Fetching a random answer...");
 
         Map<String, String> answer = new HashMap<>();
@@ -55,21 +56,21 @@ public class Magic8BallController {
                 String question = userRequest.getQuestion();
                 if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
                     answer.put(responseKey, "!");
-                    return answer;
+                   // return answer;
                 }
                 if (question.endsWith("?") && question.length() <= 120) {
-                    answer.put(responseKey, magic8BallService.getRandomAnswer(userRequest));
-                    return answer;
+                   // answer.put(responseKey, magic8BallService.getRandomAnswer(userRequest));
+                    return magic8BallService.getRandomAnswer(userRequest);
                 } else {
                     answer.put(responseKey, Answers.getAnswerByValue(21));
-                    return answer;
+                    //return answer;
                 }
             }
 
         } catch (Exception e) {
             logger.error("Exception is raised during /api/answer api processing ", e);
         }
-        return answer;
+        return magic8BallService.getRandomAnswer(userRequest);
 
     }
     @ApiOperation(value = "returns history of user")
