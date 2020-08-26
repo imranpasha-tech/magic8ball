@@ -1,9 +1,6 @@
 package com.icims.labs.services.eightball.api;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.SentimentAnswer;
@@ -42,7 +39,6 @@ public class Magic8BallController {
      * 	1. Question is "?" then returns "!"
      *  2. Question is "*?" and length is <= 120 characters then returns proper response
      *  3. else returns "try_later"
-     *
      *
      */
     @ApiOperation(value = "returns an answer with sentiment results and score for a given question")
