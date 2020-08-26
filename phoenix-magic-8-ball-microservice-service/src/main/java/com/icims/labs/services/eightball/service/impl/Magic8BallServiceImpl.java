@@ -57,9 +57,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 		
 		saveQuestionHistory(questionDTO, sentiment, userRequest.getUserId()); // saving sentiment and user info.
 		SentimentResult result = SentimentResult.builder().score(sentimentResult.getScore()).sentiment(sentiment).build();
-		SentimentAnswer answer = SentimentAnswer.builder().answer(randomAnswer).sentimentResult(result)
-				.build();
-		return answer;
+		return SentimentAnswer.builder().answer(randomAnswer).sentimentResult(result).build();
 	}
 
 	private String mapSentimentToAnswers(String sentiment) {
