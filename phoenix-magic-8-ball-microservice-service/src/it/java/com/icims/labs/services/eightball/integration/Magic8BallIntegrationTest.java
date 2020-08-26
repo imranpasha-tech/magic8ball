@@ -78,11 +78,11 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 		String question = "will it snow";
 		LocalDateTime now = LocalDateTime.now();
 
-		History history = History.builder().question(question).frequency(1).languageCode("en_US").createdDate(now)
+		History history = History.builder().question(question).truncatedQuestion("willitsnow").frequency(1).languageCode("en_US").createdDate(now)
 				.build();
 
 		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
 				.hasFieldOrPropertyWithValue("question", "will it snow").hasFieldOrPropertyWithValue("frequency", 1)
-				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now);
+				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now).hasFieldOrPropertyWithValue("truncatedQuestion","willitsnow");
 	}
 }
