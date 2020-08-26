@@ -74,6 +74,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 		} 
 	}
 	
+
 	private String decideAnswer(SentimentScore score) {
 		if (score.getPositive() > score.getNegative() && score.getPositive() > score.getNeutral()) {
 			return POSITIVE;

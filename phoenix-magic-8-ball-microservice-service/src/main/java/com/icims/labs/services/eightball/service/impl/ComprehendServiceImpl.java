@@ -35,15 +35,20 @@ public class ComprehendServiceImpl implements ComprehendService {
 	@Override
 	public SentimentResult getQuestionSentiment(UserRequest userRequest) {
 		logger.info("Calling DetectSentiment");
-		DetectSentimentRequest detectSentimentRequest = new DetectSentimentRequest().withText(userRequest.getQuestion())
-				.withLanguageCode(userRequest.getLanguage().getCode());
-		DetectSentimentResult detectSentimentResult = comprehend.detectSentiment(detectSentimentRequest);
-		logger.info("Detected sentiment is: {} ", detectSentimentResult.getSentiment());
 		
-		SentimentResult sentimentResult = SentimentResult.builder()
-						.score(detectSentimentResult.getSentimentScore())
-						.sentiment(detectSentimentResult.getSentiment()).build();
-		return sentimentResult;
+		if (userRequest != null && userRequest.getQuestion() != null) {
+			DetectSentimentRequest detectSentimentRequest = new DetectSentimentRequest()
+					.withText(userRequest.getQuestion()).withLanguageCode(userRequest.getLanguage().getCode());
+			DetectSentimentResult detectSentimentResult = comprehend.detectSentiment(detectSentimentRequest);
+			logger.info("Detected sentiment is: {} ", detectSentimentResult.getSentiment());
+
+			SentimentResult sentimentResult = SentimentResult.builder().score(detectSentimentResult.getSentimentScore())
+					.sentiment(detectSentimentResult.getSentiment()).build();
+			
+			return sentimentResult;
+		} else 
+			throw new NullPointerException();
+		
 	}
 
 }
