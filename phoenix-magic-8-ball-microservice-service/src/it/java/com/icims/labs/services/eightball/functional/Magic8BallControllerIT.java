@@ -154,7 +154,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 
 	private static UserRequest buildMockUserRequest() {
 		Language language = Language.builder().code("en").locale("en_US").name("USA").build();
-		return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
+		return UserRequest.builder().question("Will it rain ?").userId("anonymous").language(language).build();
 	}
 }
 
