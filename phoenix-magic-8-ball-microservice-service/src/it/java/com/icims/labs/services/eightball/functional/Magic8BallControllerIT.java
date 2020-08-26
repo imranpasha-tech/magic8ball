@@ -76,7 +76,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 				.andExpect(status().isOk());
 
 		Assertions.assertThat(repo.findByQuestion("Will it rain ?")).anyMatch(
-				history -> history.getQuestion().equals("Will it rain ?") && history.getLanguageCode().equals("en_US"));
+				history -> history.getQuestion().equals("Will it rain ?") && history.getLanguageCode().equals("en"));
 	}
 
 	@Test
@@ -163,7 +163,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	}
 
 	private static UserRequest buildMockUserRequest() {
-		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
+		Language language = Language.builder().code("en").locale("en_US").name("USA").build();
 		return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
 	}
 }

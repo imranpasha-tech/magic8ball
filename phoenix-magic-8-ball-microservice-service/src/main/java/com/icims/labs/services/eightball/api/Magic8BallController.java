@@ -45,7 +45,7 @@ public class Magic8BallController {
      *
      *
      */
-    @ApiOperation(value = "returns a random answer")
+    @ApiOperation(value = "returns an answer with sentiment results and score for a given question")
     @ApiResponses({ @ApiResponse(code = 200, message = "OK") })
     @PostMapping("/answer")
     public SentimentAnswer getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
