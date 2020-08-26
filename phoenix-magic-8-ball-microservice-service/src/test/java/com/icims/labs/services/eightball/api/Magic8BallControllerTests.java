@@ -53,31 +53,6 @@ public class Magic8BallControllerTests {
     }
 
     @Test
-    public void verifyResultWhenHistoryServiceIsInvoked() throws Exception {
-        when(magic8BallService.getHistory()).thenReturn(TestUtils.buildHistory());
-
-        mockMvc.perform(get("/api/history"))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    public void verifyTrendingQuestionsServiceIsInvoked() throws Exception {
-        when(magic8BallService.getTrendingQuestions(anyString())).thenReturn(TestUtils.buildHistory());
-
-        mockMvc.perform(get("/api/trendingQuestions").contentType(MediaType.APPLICATION_JSON).param("languageCode","en-US"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void verifyTrendingQuestionsServiceIs4XXWhenLanguageIsNotPassed() throws Exception {
-        when(magic8BallService.getTrendingQuestions(anyString())).thenReturn(TestUtils.buildHistory());
-
-        mockMvc.perform(get("/api/trendingQuestions").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
     public void verifyResponseIs4XXWhenRandomAnswerIsInvokedViaGet() throws Exception {
         mockMvc.perform(get("/api/answer")).andExpect(status().is4xxClientError());
     }

@@ -4,7 +4,6 @@ package com.icims.labs.services.eightball.api;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
-import com.icims.labs.services.eightball.service.Magic8BallService;
 import com.icims.labs.services.eightball.service.impl.Magic8BallServiceImpl;
 import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Assert;
@@ -16,9 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,12 +32,9 @@ public class Magic8BallServiceTests {
 
     private static History history;
 
-    private static List<History> historyList;
-
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        historyList = TestUtils.buildHistory();
         userRequest = TestUtils.buildMockUserRequest();
         history = TestUtils.buildQuestionHistory(userRequest);
     }
@@ -51,17 +46,19 @@ public class Magic8BallServiceTests {
     }
 
     @Test
-    public void verifyResultWhenGetHistoryIsCalled() {
-        Mockito.when(magic8BallRepository.findAll())
-                .thenReturn(historyList);
-        Assert.assertNotNull(magic8BallService.getHistory());
-        Assert.assertNotNull(magic8BallService.getHistory().size());
+    public void verifyFrequencyIsOneIfQuestionDoesnotExists() {
+        Mockito.when(magic8BallRepository.findByTruncatedQuestion("willitrain?", "en-US")).thenReturn(Optional.empty());
+        Mockito.when(magic8BallRepository.save(history)).thenReturn(history);
+        Assert.assertNotNull(magic8BallService.getRandomAnswer(userRequest));
+        Assert.assertEquals(history.getFrequency(), 1);
     }
 
     @Test
-    public void verifyResultWhenGetTrendingQuestionsIsCalled() {
-        Mockito.when(magic8BallRepository.getTrendingQuestionsByLanguage("en-US", PageRequest.of(0, 25)))
-                .thenReturn(historyList);
-        Assert.assertNotNull(magic8BallService.getTrendingQuestions("en-US"));
+    public void verifyFrequencyIsIncrementedIfQuestionExists() {
+        Optional<History> optionalHistory = Optional.of(history);
+        Mockito.when(magic8BallRepository.findByTruncatedQuestion("willitrain?", "en_US")).thenReturn(optionalHistory);
+        Mockito.when(magic8BallRepository.save(optionalHistory.get())).thenReturn(optionalHistory.get());
+        Assert.assertNotNull(magic8BallService.getRandomAnswer(userRequest));
+        Assert.assertEquals(2, optionalHistory.get().getFrequency());
     }
 }
