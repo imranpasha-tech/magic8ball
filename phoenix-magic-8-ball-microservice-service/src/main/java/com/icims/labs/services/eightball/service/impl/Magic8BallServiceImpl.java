@@ -54,7 +54,8 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 
 		logger.info("Random answer is fetched: {}", randomAnswer);
 		QuestionDTO questionDTO = buildQuestionDTO(userRequest, randomAnswer);
-		saveQuestionHistory(questionDTO);
+		
+		saveQuestionHistory(questionDTO, sentiment, userRequest.getUserId()); // saving sentiment and user info.
 		SentimentResult result = SentimentResult.builder().score(sentimentResult.getScore()).sentiment(sentiment).build();
 		SentimentAnswer answer = SentimentAnswer.builder().answer(randomAnswer).sentimentResult(result)
 				.build();
@@ -98,15 +99,17 @@ public class Magic8BallServiceImpl implements Magic8BallService {
         return QuestionDTO.builder().question(userRequest.getQuestion()).truncatedQuestion(truncatedQuestion).languageCode(userRequest.getLanguage().getCode()).answer(randomAnswer).build();
     }
 
-    private void saveQuestionHistory(QuestionDTO questionDTO) {
+    private void saveQuestionHistory(QuestionDTO questionDTO, String sentiment, String userId) {
         Optional<History> history = magic8BallRepository.findByTruncatedQuestion(questionDTO.getTruncatedQuestion(), questionDTO.getLanguageCode());
         if(history.isPresent()){
             int frequency = history.get().getFrequency();
             history.get().setFrequency(++frequency);
+            history.get().setAnswer(questionDTO.getAnswer());  	 // saves recently evaluated answer
+            history.get().setSentiment(sentiment);        		 // saves recently evaluated sentiment
             magic8BallRepository.save(history.get());
         }
         else {
-            magic8BallRepository.save(buildQuestionHistory(questionDTO, 1));
+            magic8BallRepository.save(buildQuestionHistory(questionDTO, 1, sentiment, userId));
         }
     }
 
@@ -114,11 +117,13 @@ public class Magic8BallServiceImpl implements Magic8BallService {
         return question.replaceAll("[,;\\s]", "");
     }
 
-    private History buildQuestionHistory(QuestionDTO questionDTO, int frequency) {
+    private History buildQuestionHistory(QuestionDTO questionDTO, int frequency, String sentiment, String userId) {
         return History.builder().question(questionDTO.getQuestion()).truncatedQuestion(questionDTO.getTruncatedQuestion())
                 .frequency(frequency)
                 .languageCode(questionDTO.getLanguageCode())
                 .createdDate(LocalDateTime.now()).answer(questionDTO.getAnswer())
+                .sentiment(sentiment)
+                .userId(userId)
                 .build();
 
     }
