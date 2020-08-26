@@ -49,21 +49,20 @@ public class Magic8BallController {
     public SentimentAnswer getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
         logger.info("Fetching a random answer...");
 
-        Map<String, String> answer = new HashMap<>();
-        String responseKey="answer";
+        SentimentAnswer answer; 
         try {
             if (userRequest != null) {
                 String question = userRequest.getQuestion();
                 if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
-                    answer.put(responseKey, "!");
-                   // return answer;
+                    answer = SentimentAnswer.builder().answer("!").build();
+                    return answer;
                 }
                 if (question.endsWith("?") && question.length() <= 120) {
-                   // answer.put(responseKey, magic8BallService.getRandomAnswer(userRequest));
-                    return magic8BallService.getRandomAnswer(userRequest);
+                    answer = magic8BallService.getRandomAnswer(userRequest);
+                    return answer;
                 } else {
-                    answer.put(responseKey, Answers.getAnswerByValue(21));
-                    //return answer;
+                    answer = SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
+                    return answer;                  
                 }
             }
 
