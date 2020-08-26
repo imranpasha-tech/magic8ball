@@ -95,5 +95,40 @@ public class Magic8BallServiceTests {
     	Assertions.assertEquals("MIXED", answer.getSentimentResult().getSentiment());
     }
     
+    @Test
+    public void verifyPositiveSentimentResult() {
+    	UserRequest request = UserRequest.builder().question("will I dance?").language(Language.builder().code("en").build()).build();
+    	SentimentResult result = SentimentResult.builder().sentiment("POSITIVE").build();
+    	
+    	when(comprehendService.getQuestionSentiment(request)).thenReturn(result);
+    	
+    	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
+    	
+    	Assertions.assertEquals("POSITIVE", answer.getSentimentResult().getSentiment());
+    }
+    
+    @Test
+    public void verifyNegativeSentimentResult() {
+    	UserRequest request = UserRequest.builder().question("will you die?").language(Language.builder().code("en").build()).build();
+    	SentimentResult result = SentimentResult.builder().sentiment("NEGATIVE").build();
+    	
+    	when(comprehendService.getQuestionSentiment(request)).thenReturn(result);
+    	
+    	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
+    	
+    	Assertions.assertEquals("NEGATIVE", answer.getSentimentResult().getSentiment());
+    }
+    
+    @Test
+    public void verifyNeutralSentimentResult() {
+    	UserRequest request = UserRequest.builder().question("Should I eat that?").language(Language.builder().code("en").build()).build();
+    	SentimentResult result = SentimentResult.builder().sentiment("NEUTRAL").build();
+    	
+    	when(comprehendService.getQuestionSentiment(request)).thenReturn(result);
+    	
+    	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
+    	
+    	Assertions.assertEquals("NEUTRAL", answer.getSentimentResult().getSentiment());
+    }
     
 }
