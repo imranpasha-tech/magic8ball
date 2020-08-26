@@ -1,7 +1,10 @@
-package com.icims.labs.services.eightball.api;
+package com.icims.labs.services.eightball.service;
 
 
+import com.amazonaws.services.comprehend.model.SentimentScore;
 import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.model.Language;
+import com.icims.labs.services.eightball.model.SentimentAnswer;
 import com.icims.labs.services.eightball.model.SentimentResult;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
@@ -11,6 +14,7 @@ import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,6 +22,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -71,5 +77,21 @@ public class Magic8BallServiceTests {
         Mockito.when(magic8BallRepository.getTrendingQuestionsByLanguage("en-US", PageRequest.of(0, 25)))
                 .thenReturn(historyList);
         Assert.assertNotNull(magic8BallService.getTrendingQuestions("en-US"));
+    }
+    
+    @Test
+    public void verifyMixedSentimentIsPositive() {
+    	UserRequest request = UserRequest.builder().question("will I dance?").language(Language.builder().code("en").build()).build();
+    	SentimentScore score = new SentimentScore();
+    	score.setPositive(0.5999f);
+    	score.setNegative(0.0235f);
+    	score.setNeutral(0.0456f);
+    	
+    	SentimentResult result = SentimentResult.builder().sentiment("MIXED").score(score).build();
+    	when(comprehendService.getQuestionSentiment(request)).thenReturn(result);
+    	
+    	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
+    	
+    	Assertions.assertEquals("MIXED", answer.getSentimentResult().getSentiment());
     }
 }

@@ -44,11 +44,11 @@ public class ComprehendServiceImpl implements ComprehendService {
 
 			SentimentResult sentimentResult = SentimentResult.builder().score(detectSentimentResult.getSentimentScore())
 					.sentiment(detectSentimentResult.getSentiment()).build();
-			
+
 			return sentimentResult;
-		} else 
-			throw new NullPointerException();
-		
+		} else
+			throw new IllegalArgumentException("Question cannot be null; try again");
+
 	}
 
 }

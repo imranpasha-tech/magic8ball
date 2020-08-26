@@ -54,13 +54,13 @@ public class ComprehendServiceTests {
 	public void checkExceptionThrownWhenQuestionIsNull() {
 		UserRequest request = UserRequest.builder().question(null).build();
 		
-		assertThrows(NullPointerException.class, () -> comprehendService.getQuestionSentiment(request));
+		assertThrows(IllegalArgumentException.class, () -> comprehendService.getQuestionSentiment(request));
 	}
 	
 	@Test 
 	public void checkExceptionThrownWhenUserRequestIsNull() {
 		UserRequest request = null;
-		assertThrows(NullPointerException.class, () -> comprehendService.getQuestionSentiment(request));
+		assertThrows(IllegalArgumentException.class, () -> comprehendService.getQuestionSentiment(request));
 	}
 	
 	@Test
