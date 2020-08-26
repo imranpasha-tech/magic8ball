@@ -1,5 +1,6 @@
 package com.icims.labs.services.eightball.api;
 
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.Language;
@@ -74,4 +75,42 @@ public class Magic8BallControllerTests {
         Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
         return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
     }
+    
+    @Test
+    public void responseAnswerWhenPayLoadContainsOnlyQuestionMark() throws Exception
+    {
+    	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+    			.content("{\"question\":\"?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+    	.andExpect(status().isOk())
+    	.andExpect(jsonPath("$.answer").value("!"));
+    }
+    
+  @Test
+    public void responseAnswerWhenPayloadEndsWithQuestionMark() throws Exception
+    {
+    	when(magic8BallService.getRandomAnswer(buildMockUserRequest())).thenReturn("It is likely");
+    	
+    	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+    			.content("{\"question\":\"Will it rain today\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+    	        .andExpect(status().isOk());
+    	        
+    }
+   
+  @Test
+  public void responseAnswerWhenPayLoadContainsNull() throws Exception
+  {
+  	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+  			.content("{\"question\":null,\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+  	.andExpect(status().isOk());
+  	
+  }
+  
+  @Test
+  public void responseAnswerWhenPayLoadContainsToomuchLength() throws Exception
+  {
+  	mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+  			.content("{\"question\":\"Will it rain todayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
+  	.andExpect(status().isOk());
+  	
+  }
 }

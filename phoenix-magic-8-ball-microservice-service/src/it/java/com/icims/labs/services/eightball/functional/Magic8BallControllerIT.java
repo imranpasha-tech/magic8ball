@@ -1,14 +1,14 @@
-package com.icims.labs.services.eightball.api;
+package com.icims.labs.services.eightball.functional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.icims.labs.services.eightball.api.utility.Magic8BallRepo;
-import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.api.Magic8BallController;
 import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.UserRequest;
-import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import com.icims.labs.services.eightball.service.Magic8BallService;
+import com.icims.labs.services.eightball.utility.AbstractDataTestContainer;
+import com.icims.labs.services.eightball.utility.Magic8BallRepo;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -24,8 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -34,8 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -51,13 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  */
 @ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@ContextConfiguration(initializers = { Magic8BallControllerIT.Initializer.class })
-@Testcontainers
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class Magic8BallControllerIT {
+public class Magic8BallControllerIT extends AbstractDataTestContainer{
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -73,24 +66,9 @@ public class Magic8BallControllerIT {
 		repo.deleteAll();
 		assertThat(repo.count()).isZero();
 	}
-
-	@ClassRule
-	public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
-			.withDatabaseName("phoenix_magic_8_ball").withUsername("postgres").withPassword("root");
-
-	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-			TestPropertyValues
-					.of("spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-							"spring.datasource.username=" + postgreSQLContainer.getUsername(),
-							"spring.datasource.password=" + postgreSQLContainer.getPassword())
-					.applyTo(configurableApplicationContext.getEnvironment());
-		}
-	}
-	
 	
 	@Test
-	public void randomAnswerFetchedWhenSuccessful() throws Exception {
+	public void randomAnswerSuccessfulWhenFieldsAreValid() throws Exception {
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(buildMockUserRequest()))).andDo(print())
 				.andExpect(status().isOk());
@@ -137,6 +115,32 @@ public class Magic8BallControllerIT {
 		String answer = resultNode.get("answer").asText();
 
 		assertTrue(checkEnumAnswers(answer));
+	}
+	
+	@Test
+	public void randomAnswerFailsToPersistOnQuestionLengthAbove120Long() throws Exception {
+		String question = "blahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahah";
+		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build(); 
+		UserRequest request = UserRequest.builder().question(question).userId(null).language(language).build();
+		
+		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
+				.andExpect(status().isOk());
+		
+		Assertions.assertThat(repo.findByQuestion("Will it rain ?")).noneMatch(history -> history.getQuestion().equals(question));
+	}
+	
+	@Test
+	public void randomAnswerFailsToPersistOnQuestionLengthOne() throws Exception {
+		String question = "?";
+		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build(); 
+		UserRequest request = UserRequest.builder().question(question).userId(null).language(language).build();
+		
+		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
+				.andExpect(status().isOk());
+		
+		Assertions.assertThat(repo.findByQuestion("?")).noneMatch(history -> history.getQuestion().equals(question));
 	}
 
 	private boolean checkEnumAnswers(String answer) {

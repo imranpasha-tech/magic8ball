@@ -19,7 +19,7 @@ public class History {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "question")
+    @Column(name = "question", length = 120)
     private String question;
 
     @Column(name = "frequency")
