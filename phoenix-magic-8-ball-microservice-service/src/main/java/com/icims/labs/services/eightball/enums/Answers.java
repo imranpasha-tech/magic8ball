@@ -36,27 +36,23 @@ public enum Answers {
         return answerKey;
     }
     
-    public static String getAnswerByValue(final Integer value)
-    {
-    	String responseAnswer=null;
-    	String response="try_later";
-    	if(value != null)
-    	{
-    		switch(value)
-    		{
-    		case 1:
-    			responseAnswer = response;
-    			break;
-    		default :
-    			responseAnswer = response;
-    		}
-    	}
-    	else
-    	{
-    		responseAnswer = response;
-    	}
-    	return responseAnswer;
-    }
+	public static String getAnswerByValue(final Integer value) {
+		String responseAnswer = null;
+		String response = "try_later";
+		if (value != null) {
+			switch (value) {
+			case 1:
+				responseAnswer = response;
+				break;
+			default:
+				responseAnswer = response;
+			}
+		} else {
+			responseAnswer = response;
+		}
+		return responseAnswer;
+	}
+
     Answers(int answerId, String answerKey){
      this.answerId = answerId;
      this.answerKey = answerKey;
