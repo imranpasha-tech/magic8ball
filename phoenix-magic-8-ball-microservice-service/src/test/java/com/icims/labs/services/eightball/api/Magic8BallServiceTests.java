@@ -2,8 +2,10 @@ package com.icims.labs.services.eightball.api;
 
 
 import com.icims.labs.services.eightball.entity.History;
+import com.icims.labs.services.eightball.model.SentimentResult;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
+import com.icims.labs.services.eightball.service.ComprehendService;
 import com.icims.labs.services.eightball.service.Magic8BallService;
 import com.icims.labs.services.eightball.service.impl.Magic8BallServiceImpl;
 import com.icims.labs.services.eightball.util.TestUtils;
@@ -29,12 +31,17 @@ public class Magic8BallServiceTests {
 
     @Mock
     private Magic8BallRepository magic8BallRepository;
+    
+    @Mock 
+    private ComprehendService comprehendService;
 
     private static UserRequest userRequest;
 
     private static History history;
 
     private static List<History> historyList;
+    
+    private static SentimentResult sentimentResult;
 
     @Before
     public void setUp(){
@@ -42,11 +49,13 @@ public class Magic8BallServiceTests {
         historyList = TestUtils.buildHistory();
         userRequest = TestUtils.buildMockUserRequest();
         history = TestUtils.buildQuestionHistory(userRequest);
+        sentimentResult = TestUtils.buildSentimentResult(userRequest);
     }
 
     @Test
     public void verifyStringResultWhenGetRandomAnswerIsCalled() {
         Mockito.when(magic8BallRepository.save(history)).thenReturn(history);
+        Mockito.when(comprehendService.getQuestionSentiment(userRequest)).thenReturn(sentimentResult);
         Assert.assertNotNull(magic8BallService.getRandomAnswer(userRequest));
     }
 
