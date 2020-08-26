@@ -43,17 +43,20 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 	public SentimentAnswer getRandomAnswer(UserRequest userRequest) {
 		SentimentResult sentimentResult = comprehendService.getQuestionSentiment(userRequest);
 		String randomAnswer;
+		String sentiment;
 		if (sentimentResult.getSentiment().equals("MIXED")) {
-			String sentiment = decideAnswer(sentimentResult.getScore());
+			sentiment = decideAnswer(sentimentResult.getScore());
 			randomAnswer = mapSentimentToAnswers(sentiment);
 		} else {
 			randomAnswer = mapSentimentToAnswers(sentimentResult.getSentiment());
+			sentiment = sentimentResult.getSentiment();
 		}
 
 		logger.info("Random answer is fetched: {}", randomAnswer);
 		QuestionDTO questionDTO = buildQuestionDTO(userRequest, randomAnswer);
 		saveQuestionHistory(questionDTO);
-		SentimentAnswer answer = SentimentAnswer.builder().answer(randomAnswer).sentimentResult(sentimentResult)
+		SentimentResult result = SentimentResult.builder().score(sentimentResult.getScore()).sentiment(sentiment).build();
+		SentimentAnswer answer = SentimentAnswer.builder().answer(randomAnswer).sentimentResult(result)
 				.build();
 		return answer;
 	}
