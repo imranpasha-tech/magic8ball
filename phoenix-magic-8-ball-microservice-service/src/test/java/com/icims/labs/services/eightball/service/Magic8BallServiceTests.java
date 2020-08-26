@@ -80,7 +80,7 @@ public class Magic8BallServiceTests {
     }
     
     @Test
-    public void verifyMixedSentimentResult() {
+    public void verifyMixedSentimentIsPositiveResult() {
     	UserRequest request = UserRequest.builder().question("will I dance?").language(Language.builder().code("en").build()).build();
     	SentimentScore score = new SentimentScore();
     	score.setPositive(0.5999f);
@@ -92,7 +92,39 @@ public class Magic8BallServiceTests {
     	
     	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
     	
-    	Assertions.assertEquals("MIXED", answer.getSentimentResult().getSentiment());
+    	Assertions.assertEquals("POSITIVE", answer.getSentimentResult().getSentiment());
+    }
+    
+    @Test
+    public void verifyMixedSentimentIsNegativeResult() {
+    	UserRequest request = UserRequest.builder().question("will I dance?").language(Language.builder().code("en").build()).build();
+    	SentimentScore score = new SentimentScore();
+    	score.setPositive(0.0999f);
+    	score.setNegative(0.2355f);
+    	score.setNeutral(0.0456f);
+    	
+    	SentimentResult result = SentimentResult.builder().sentiment("MIXED").score(score).build();
+    	when(comprehendService.getQuestionSentiment(request)).thenReturn(result);
+    	
+    	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
+    	
+    	Assertions.assertEquals("NEGATIVE", answer.getSentimentResult().getSentiment());
+    }
+    
+    @Test
+    public void verifyMixedSentimentIsNeutralResult() {
+    	UserRequest request = UserRequest.builder().question("will I dance?").language(Language.builder().code("en").build()).build();
+    	SentimentScore score = new SentimentScore();
+    	score.setPositive(0.0999f);
+    	score.setNegative(0.0999f);
+    	score.setNeutral(0.0999f);
+    	
+    	SentimentResult result = SentimentResult.builder().sentiment("MIXED").score(score).build();
+    	when(comprehendService.getQuestionSentiment(request)).thenReturn(result);
+    	
+    	SentimentAnswer answer = magic8BallService.getRandomAnswer(request);
+    	
+    	Assertions.assertEquals("NEUTRAL", answer.getSentimentResult().getSentiment());
     }
     
     @Test
