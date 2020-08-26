@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -39,6 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * This class performs isolated functional testing of {@link Magic8BallController} and {@link Magic8BallService}
@@ -141,6 +143,13 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 				.andExpect(status().isOk());
 		
 		Assertions.assertThat(repo.findByQuestion("?")).noneMatch(history -> history.getQuestion().equals(question));
+	}
+	
+	@Test
+	public void createTrendingQuestionsWhenValid() throws Exception {
+		mockMvc.perform(get("/api/trendingQuestions").contentType(MediaType.APPLICATION_JSON).param("languageCode","en-US"))
+				.andExpect(status().isOk());
+		Assertions.assertThat(repo.getTrendingQuestionsByLanguage("en-US",PageRequest.of(0, 25))).isNotNull();
 	}
 
 	private boolean checkEnumAnswers(String answer) {
