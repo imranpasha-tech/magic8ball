@@ -6,7 +6,6 @@ import com.icims.labs.services.eightball.model.SentimentResult;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import com.icims.labs.services.eightball.service.ComprehendService;
-import com.icims.labs.services.eightball.service.Magic8BallService;
 import com.icims.labs.services.eightball.service.impl.Magic8BallServiceImpl;
 import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Assert;

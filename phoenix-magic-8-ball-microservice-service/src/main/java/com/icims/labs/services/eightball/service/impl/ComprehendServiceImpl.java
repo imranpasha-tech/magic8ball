@@ -14,6 +14,13 @@ import com.icims.labs.services.eightball.model.SentimentResult;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.ComprehendService;
 
+
+/**
+ * This service contacts AWS comprehend service and gives sentiment results.
+ * 
+ * @author imran.pasha {@literal ipasha.icims.com}
+ *
+ */
 @Service
 public class ComprehendServiceImpl implements ComprehendService {
 	private static final Logger logger = LoggerFactory.getLogger(ComprehendServiceImpl.class);

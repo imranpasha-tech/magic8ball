@@ -36,7 +36,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
     private ComprehendService comprehendService;
 
     /**
-     * Service method that selects a random mocked answer.
+     * Service method that fetches an answer by analyzing sentiment of the question.
      *
      * @return String
      */

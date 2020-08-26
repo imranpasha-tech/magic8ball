@@ -37,9 +37,11 @@ public class Magic8BallController {
     private Magic8BallService magic8BallService;
 
     /*
-     * validate ? on request validate request lenght max 120 characters if request
-     * has only ? ,response should be ! if request has upper/lower/mix ,store all
-     * them in lower case for "trending/history"
+     * Method performs:
+     * request validation when
+     * 	1. Question is "?" then returns "!"
+     *  2. Question is "*?" and length is <= 120 characters then returns proper response
+     *  3. else returns "try_later"
      *
      *
      */
