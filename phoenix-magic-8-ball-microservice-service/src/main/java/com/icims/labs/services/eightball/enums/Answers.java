@@ -7,7 +7,7 @@ public enum Answers {
     DECIDED_ANSWER(2,"decided_answer"),
     NO_DOUBT_ANSWER(3,"no_doubt_answer"),
     DEFINITE_ANSWER(4, "definite_answer"),
-    RELY_ANSWER(5, "rely_anser"),
+    RELY_ANSWER(5, "rely_answer"),
     SEE_YES_ANSWER(6,"see_yes_answer"),
     LIKELY_ANSWER(7,"likely_answer"),
     OUTLOOK_GOOD_ANSWER(8,"outlook_good_answer"),
@@ -27,7 +27,7 @@ public enum Answers {
 	
     private int answerId;
     private String answerKey;
- 
+
     public int getAnswerId() {
         return answerId;
     }
