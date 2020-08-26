@@ -22,8 +22,6 @@ public class Magic8BallHistoryController {
     @Autowired
     private Magic8BallHistoryService magic8BallHistoryService;
 
-    private static final Logger logger = LoggerFactory.getLogger(Magic8BallHistoryController.class);
-
     @ApiOperation(value = "returns history of user")
     @GetMapping("/history")
     public List<History> getHistory() {

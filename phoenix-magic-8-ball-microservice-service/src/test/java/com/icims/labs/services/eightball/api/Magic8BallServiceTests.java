@@ -50,7 +50,7 @@ public class Magic8BallServiceTests {
         Mockito.when(magic8BallRepository.findByTruncatedQuestion("willitrain?", "en-US")).thenReturn(Optional.empty());
         Mockito.when(magic8BallRepository.save(history)).thenReturn(history);
         Assert.assertNotNull(magic8BallService.getRandomAnswer(userRequest));
-        Assert.assertEquals(history.getFrequency(), 1);
+        Assert.assertEquals(1, history.getFrequency());
     }
 
     @Test

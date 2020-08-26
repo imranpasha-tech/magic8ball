@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 public class Magic8BallCommons {
 
+    private Magic8BallCommons(){}
+
     public static String truncate(String question) {
         return question.replaceAll("[,;\\s]", "");
     }

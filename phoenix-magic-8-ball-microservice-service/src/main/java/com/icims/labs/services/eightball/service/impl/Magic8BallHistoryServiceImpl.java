@@ -14,9 +14,7 @@ import java.util.List;
 @Service
 public class Magic8BallHistoryServiceImpl implements Magic8BallHistoryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(Magic8BallHistoryServiceImpl.class);
-
-    @Autowired
+        @Autowired
     private Magic8BallRepository magic8BallRepository;
 
     @Override
