@@ -52,7 +52,7 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 	public void persistSuccessWhenQuestionLengthIsLessThan120() {
 		String question = "blahblahblah?";
 		History history = History.builder().question(question).frequency(1).languageCode("en_US")
-				.createdDate(LocalDateTime.now()).truncatedQuestion("").answer("yes_answer").build();
+				.createdDate(LocalDateTime.now()).truncatedQuestion("").answer("yes_answer").sentiment("POSITIVE").userId("anonymous").build();
 
 		Assertions.assertThat(repo.save(history)).as("Succcessfully saved question")
 				.hasFieldOrPropertyWithValue("question", "blahblahblah?")
@@ -65,7 +65,7 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 		LocalDateTime now = LocalDateTime.now();
 
 		History history = History.builder().question(question).truncatedQuestion("willitsnow?").frequency(1).languageCode("en_US").createdDate(now)
-				.answer("yes_answer").build();
+				.answer("yes_answer").sentiment("POSITIVE").userId("anonymous").build();
 
 		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
 				.hasFieldOrPropertyWithValue("question", "will it snow?").hasFieldOrPropertyWithValue("frequency", 1)

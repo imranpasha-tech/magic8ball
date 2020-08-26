@@ -11,7 +11,7 @@
 ----------
 CREATE TABLE magic_eight_ball_history(
     id SERIAL PRIMARY KEY NOT NULL,
-    user_id varchar(30),
+    user_id varchar(30) NOT NULL,
     question VARCHAR(120) NOT NULL,
     truncated_question VARCHAR(120) NOT NULL,
     frequency integer NOT NULL,
