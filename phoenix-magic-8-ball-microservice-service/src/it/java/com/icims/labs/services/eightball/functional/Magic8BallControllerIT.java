@@ -149,7 +149,6 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	public void createTrendingQuestionsWhenValid() throws Exception {
 		mockMvc.perform(get("/api/trendingQuestions").contentType(MediaType.APPLICATION_JSON).param("languageCode","en-US"))
 				.andExpect(status().isOk());
-		Assertions.assertThat(repo.getTrendingQuestionsByLanguage("en-US",PageRequest.of(0, 25)));
 	}
 
 	private boolean checkEnumAnswers(String answer) {
