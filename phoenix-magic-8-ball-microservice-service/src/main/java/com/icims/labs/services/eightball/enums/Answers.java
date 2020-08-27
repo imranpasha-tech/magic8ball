@@ -23,7 +23,7 @@ public enum Answers {
     SOURCES_NO_ANSWER(18, "sources_no_answer"),
     OUTLOOK_BAD_ANSWER(19, "outlook_bad_answer"),
     DOUBTFUL_ANSWER(20,"doubtful_answer"),
-    TRY_LATER_ANSWER(21,"try_later");
+    TRY_LATER_ANSWER(21,"plz_try_later");
 	
     private int answerId;
     private String answerKey;
@@ -36,27 +36,23 @@ public enum Answers {
         return answerKey;
     }
     
-    public static String getAnswerByValue(final Integer value)
-    {
-    	String responseAnswer=null;
-    	String response="try_later";
-    	if(value != null)
-    	{
-    		switch(value)
-    		{
-    		case 1:
-    			responseAnswer = response;
-    			break;
-    		default :
-    			responseAnswer = response;
-    		}
-    	}
-    	else
-    	{
-    		responseAnswer = "try_later";
-    	}
-    	return responseAnswer;
-    }
+	public static String getAnswerByValue(final Integer value) {
+		String responseAnswer = null;
+		String response = "try_later";
+		if (value != null) {
+			switch (value) {
+			case 1:
+				responseAnswer = response;
+				break;
+			default:
+				responseAnswer = response;
+			}
+		} else {
+			responseAnswer = response;
+		}
+		return responseAnswer;
+	}
+
     Answers(int answerId, String answerKey){
      this.answerId = answerId;
      this.answerKey = answerKey;

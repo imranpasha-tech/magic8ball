@@ -16,6 +16,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -47,7 +54,7 @@ public class Magic8BallController {
     public SentimentAnswer getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
         logger.info("Fetching a random answer...");
 
-        SentimentAnswer answer; 
+        SentimentAnswer answer;
         try {
             if (userRequest != null) {
                 String question = userRequest.getQuestion();
@@ -60,7 +67,7 @@ public class Magic8BallController {
                     return answer;
                 } else {
                     answer = SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
-                    return answer;                  
+                    return answer;
                 }
             }
 
@@ -70,17 +77,4 @@ public class Magic8BallController {
         return magic8BallService.getRandomAnswer(userRequest);
 
     }
-    @ApiOperation(value = "returns history of user")
-    @GetMapping("/history")
-    public List<History> getHistory() {
-        return magic8BallService.getHistory();
-    }
-
-    @ApiOperation(value = "returns trending questions")
-    @GetMapping("/trendingQuestions")
-    public List<History> getTrendingQuestions(@RequestParam String languageCode) {
-        return magic8BallService.getTrendingQuestions(languageCode);
-    }
-
-
 }

@@ -60,7 +60,7 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 	}
 
 	@Test
-	public void persistSucceedsWhenAllFiledsAreValid() {
+	public void persistSucceedsWhenAllFieldsAreValid() {
 		String question = "will it snow?";
 		LocalDateTime now = LocalDateTime.now();
 
@@ -71,5 +71,18 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 				.hasFieldOrPropertyWithValue("question", "will it snow?").hasFieldOrPropertyWithValue("frequency", 1)
 				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now).hasFieldOrPropertyWithValue("truncatedQuestion", "willitsnow?")
 				.hasFieldOrPropertyWithValue("answer","yes_answer");
+	}
+	
+	@Test
+	public void persistSucceedsWhenAllFieldsAreValidAndWithoutQuestionMark() {
+		String question = "will it snow";
+		LocalDateTime now = LocalDateTime.now();
+
+		History history = History.builder().question(question).truncatedQuestion("willitsnow").frequency(1).languageCode("en_US").createdDate(now).answer("yes_answer")
+				.build();
+
+		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
+				.hasFieldOrPropertyWithValue("question", "will it snow").hasFieldOrPropertyWithValue("frequency", 1).hasFieldOrPropertyWithValue("answer", "yes_answer")
+				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now).hasFieldOrPropertyWithValue("truncatedQuestion","willitsnow");
 	}
 }

@@ -1,6 +1,7 @@
 package com.icims.labs.services.eightball.service.impl;
 
 import com.amazonaws.services.comprehend.model.SentimentScore;
+import com.icims.labs.services.eightball.commons.Magic8BallCommons;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.enums.Answers;
 import com.icims.labs.services.eightball.model.QuestionDTO;
@@ -17,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 
@@ -28,11 +29,11 @@ public class Magic8BallServiceImpl implements Magic8BallService {
     private static final String POSITIVE = "POSITIVE";
     private static final String NEGATIVE = "NEGATIVE";
     private static final String NEUTRAL = "NEUTRAL";
-    
+
     @Autowired
     private Magic8BallRepository magic8BallRepository;
-    
-    @Autowired 
+
+    @Autowired
     private ComprehendService comprehendService;
 
     /**
@@ -54,7 +55,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 
 		logger.info("Random answer is fetched: {}", randomAnswer);
 		QuestionDTO questionDTO = buildQuestionDTO(userRequest, randomAnswer);
-		
+
 		saveQuestionHistory(questionDTO, sentiment, userRequest.getUserId()); // saving sentiment and user info.
 		SentimentResult result = SentimentResult.builder().score(sentimentResult.getScore()).sentiment(sentiment).build();
 		return SentimentAnswer.builder().answer(randomAnswer).sentimentResult(result).build();
@@ -73,9 +74,9 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 			int randomNum = getRandomNumberInRange(15, 19);
 			Answers ans = Answers.values()[randomNum];
 			return ans.getAnswerKey();
-		} 
+		}
 	}
-	
+
 
 	private String decideAnswer(SentimentScore score) {
 		if (score.getPositive() > score.getNegative() && score.getPositive() > score.getNeutral()) {
@@ -97,6 +98,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
         return QuestionDTO.builder().question(userRequest.getQuestion()).truncatedQuestion(truncatedQuestion).languageCode(userRequest.getLanguage().getCode()).answer(randomAnswer).build();
     }
 
+    @Trasactional
     private void saveQuestionHistory(QuestionDTO questionDTO, String sentiment, String userId) {
         Optional<History> history = magic8BallRepository.findByTruncatedQuestion(questionDTO.getTruncatedQuestion(), questionDTO.getLanguageCode());
         if(history.isPresent()){
@@ -108,6 +110,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
         }
         else {
             magic8BallRepository.save(buildQuestionHistory(questionDTO, 1, sentiment, userId));
+            magic8BallRepository.save(Magic8BallCommons.buildQuestionHistory(questionDTO, 1));
         }
     }
 
