@@ -87,7 +87,7 @@ Resources:
         - Name: app
           Environment:
             - Name: SPRING_APPLICATION_JSON
-            Value: !Sub |
+              Value: !Sub |
               {
               "spring.datasource.url": "jdbc:postgresql://${PostgresDatabase.Endpoint}/${PostgresDatabase.DatabaseName}",
               "spring.datasource.username": "${PostgresDatabase.UpdaterUser}",
