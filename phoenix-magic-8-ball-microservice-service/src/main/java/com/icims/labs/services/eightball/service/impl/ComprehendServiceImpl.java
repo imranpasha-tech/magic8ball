@@ -14,37 +14,36 @@ import com.icims.labs.services.eightball.service.ComprehendService;
 
 /**
  * This service contacts AWS comprehend service and gives sentiment results.
- * 
- * @author imran.pasha {@literal ipasha.icims.com}
  *
+ * @author imran.pasha {@literal ipasha.icims.com}
  */
 @Service
 public class ComprehendServiceImpl implements ComprehendService {
-	private static final Logger logger = LoggerFactory.getLogger(ComprehendServiceImpl.class);
-	private AmazonComprehend comprehend;
+    private static final Logger logger = LoggerFactory.getLogger(ComprehendServiceImpl.class);
+    private AmazonComprehend comprehend;
 
-	@Autowired
-	public ComprehendServiceImpl(AmazonComprehend amzComprehend) {
-		this.comprehend = amzComprehend;
-	}
+    @Autowired
+    public ComprehendServiceImpl(AmazonComprehend amzComprehend) {
+        this.comprehend = amzComprehend;
+    }
 
-	@Override
-	public SentimentResult getQuestionSentiment(UserRequest userRequest) {
-		logger.info("Calling DetectSentiment");
+    @Override
+    public SentimentResult getQuestionSentiment(UserRequest userRequest) {
+        logger.info("Calling DetectSentiment");
 
-		if (userRequest != null && userRequest.getQuestion() != null) {
-			DetectSentimentRequest detectSentimentRequest = new DetectSentimentRequest()
-					.withText(userRequest.getQuestion()).withLanguageCode(userRequest.getLanguage().getCode());
-			DetectSentimentResult detectSentimentResult = comprehend.detectSentiment(detectSentimentRequest);
-			logger.info("Detected sentiment is: {} ", detectSentimentResult.getSentiment());
+        if (userRequest != null && userRequest.getQuestion() != null) {
+            DetectSentimentRequest detectSentimentRequest = new DetectSentimentRequest()
+                    .withText(userRequest.getQuestion()).withLanguageCode(userRequest.getLanguage().getCode());
+            DetectSentimentResult detectSentimentResult = comprehend.detectSentiment(detectSentimentRequest);
+            logger.info("Detected sentiment is: {} ", detectSentimentResult.getSentiment());
 
-			SentimentResult sentimentResult = SentimentResult.builder().score(detectSentimentResult.getSentimentScore())
-					.sentiment(detectSentimentResult.getSentiment()).build();
+            SentimentResult sentimentResult = SentimentResult.builder().score(detectSentimentResult.getSentimentScore())
+                    .sentiment(detectSentimentResult.getSentiment()).build();
 
-			return sentimentResult;
-		} else
-			throw new IllegalArgumentException("Question cannot be null; try again");
+            return sentimentResult;
+        } else
+            throw new IllegalArgumentException("Question cannot be null; try again");
 
-	}
+    }
 
 }
