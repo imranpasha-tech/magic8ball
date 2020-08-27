@@ -5,16 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.comprehend.AmazonComprehend;
-import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder;
 import com.amazonaws.services.comprehend.model.DetectSentimentRequest;
 import com.amazonaws.services.comprehend.model.DetectSentimentResult;
 import com.icims.labs.services.eightball.model.SentimentResult;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.ComprehendService;
-
 
 /**
  * This service contacts AWS comprehend service and gives sentiment results.
@@ -35,7 +31,7 @@ public class ComprehendServiceImpl implements ComprehendService {
 	@Override
 	public SentimentResult getQuestionSentiment(UserRequest userRequest) {
 		logger.info("Calling DetectSentiment");
-		
+
 		if (userRequest != null && userRequest.getQuestion() != null) {
 			DetectSentimentRequest detectSentimentRequest = new DetectSentimentRequest()
 					.withText(userRequest.getQuestion()).withLanguageCode(userRequest.getLanguage().getCode());

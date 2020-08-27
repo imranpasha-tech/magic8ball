@@ -4,7 +4,6 @@ import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
 import com.icims.labs.services.eightball.service.impl.Magic8BallHistoryServiceImpl;
-import com.icims.labs.services.eightball.service.impl.Magic8BallServiceImpl;
 import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Assert;
 import org.junit.Before;

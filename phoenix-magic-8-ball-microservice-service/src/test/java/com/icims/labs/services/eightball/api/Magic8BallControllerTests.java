@@ -5,7 +5,6 @@ import com.icims.labs.services.eightball.model.Language;
 import com.icims.labs.services.eightball.model.SentimentAnswer;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.service.Magic8BallService;
-import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,31 +48,6 @@ public class Magic8BallControllerTests {
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(buildMockUserRequest()))).andExpect(status().isOk())
 				.andExpect(jsonPath("$.answer").isString());
-	}
-
-	@Test
-	public void verifyResultWhenHistoryServiceIsInvoked() throws Exception {
-		when(magic8BallService.getHistory()).thenReturn(TestUtils.buildHistory());
-
-		mockMvc.perform(get("/api/history")).andExpect(status().isOk());
-
-	}
-
-	@Test
-	public void verifyTrendingQuestionsServiceIsInvoked() throws Exception {
-		when(magic8BallService.getTrendingQuestions(anyString())).thenReturn(TestUtils.buildHistory());
-
-		mockMvc.perform(
-				get("/api/trendingQuestions").contentType(MediaType.APPLICATION_JSON).param("languageCode", "en-US"))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	public void verifyTrendingQuestionsServiceIs4XXWhenLanguageIsNotPassed() throws Exception {
-		when(magic8BallService.getTrendingQuestions(anyString())).thenReturn(TestUtils.buildHistory());
-
-		mockMvc.perform(get("/api/trendingQuestions").contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().is4xxClientError());
 	}
 
 	@Test

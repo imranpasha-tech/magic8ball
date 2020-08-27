@@ -15,13 +15,11 @@ import com.icims.labs.services.eightball.service.Magic8BallService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -111,8 +109,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
             magic8BallRepository.save(history.get());
         }
         else {
-            magic8BallRepository.save(buildQuestionHistory(questionDTO, 1, sentiment, userId));
-            magic8BallRepository.save(Magic8BallCommons.buildQuestionHistory(questionDTO, 1));
+            magic8BallRepository.save(Magic8BallCommons.buildQuestionHistory(questionDTO, 1, sentiment, userId));
         }
     }
 
@@ -120,25 +117,6 @@ public class Magic8BallServiceImpl implements Magic8BallService {
         return question.replaceAll("[,;\\s]", "");
     }
 
-    private History buildQuestionHistory(QuestionDTO questionDTO, int frequency, String sentiment, String userId) {
-        return History.builder().question(questionDTO.getQuestion()).truncatedQuestion(questionDTO.getTruncatedQuestion())
-                .frequency(frequency)
-                .languageCode(questionDTO.getLanguageCode())
-                .createdDate(LocalDateTime.now()).answer(questionDTO.getAnswer())
-                .sentiment(sentiment)
-                .userId(userId)
-                .build();
-
-    }
-
-    public List<History> getHistory() {
-        return magic8BallRepository.findAll();
-    }
-
-    @Override
-    public List<History> getTrendingQuestions(String languageCode) {
-        return magic8BallRepository.getTrendingQuestionsByLanguage(languageCode, PageRequest.of(0, 25));
-    }
 
 
 }

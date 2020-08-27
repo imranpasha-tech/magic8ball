@@ -8,7 +8,6 @@ import com.icims.labs.services.eightball.model.SentimentAnswer;
 import com.icims.labs.services.eightball.model.SentimentResult;
 import com.icims.labs.services.eightball.model.UserRequest;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
-import com.icims.labs.services.eightball.service.ComprehendService;
 import com.icims.labs.services.eightball.service.impl.Magic8BallServiceImpl;
 import com.icims.labs.services.eightball.util.TestUtils;
 import org.junit.Assert;
@@ -21,8 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -62,21 +59,6 @@ public class Magic8BallServiceTests {
         Mockito.when(magic8BallRepository.save(history)).thenReturn(history);
         Mockito.when(comprehendService.getQuestionSentiment(userRequest)).thenReturn(sentimentResult);
         Assert.assertNotNull(magic8BallService.getRandomAnswer(userRequest));
-    }
-
-    @Test
-    public void verifyResultWhenGetHistoryIsCalled() {
-        Mockito.when(magic8BallRepository.findAll())
-                .thenReturn(historyList);
-        Assert.assertNotNull(magic8BallService.getHistory());
-        Assert.assertNotNull(magic8BallService.getHistory().size());
-    }
-
-    @Test
-    public void verifyResultWhenGetTrendingQuestionsIsCalled() {
-        Mockito.when(magic8BallRepository.getTrendingQuestionsByLanguage("en-US", PageRequest.of(0, 25)))
-                .thenReturn(historyList);
-        Assert.assertNotNull(magic8BallService.getTrendingQuestions("en-US"));
     }
     
     @Test
