@@ -87,10 +87,12 @@ Resources:
         - Name: app
           Environment:
             - Name: SPRING_APPLICATION_JSON
-              Value: !Sub |
-                {
-                  "DUMMY_VAR": "${ImageTag}"
-                }
+            Value: !Sub |
+              {
+              "spring.datasource.url": "jdbc:postgresql://${PostgresDatabase.Endpoint}/${PostgresDatabase.DatabaseName}",
+              "spring.datasource.username": "${PostgresDatabase.UpdaterUser}",
+              "spring.datasource.password": "${SchemaPassword.Value}"
+              }
             - Name: AWS_REGION
               Value: !Ref "AWS::Region"
             - Name: CUSTOM_VARIABLE
