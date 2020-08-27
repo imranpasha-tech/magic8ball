@@ -81,10 +81,7 @@ public class Magic8BallControllerTests {
 	public void verifyResponseIs4XXWhenRandomAnswerIsInvokedViaGet() throws Exception {
 		mockMvc.perform(get("/api/answer")).andExpect(status().is4xxClientError());
 	}
-    @Test
-    public void verifyResponseIs4XXWhenRandomAnswerIsInvokedViaGet() throws Exception {
-        mockMvc.perform(get("/api/answer")).andExpect(status().is4xxClientError());
-    }
+   
 
 	public static UserRequest buildMockUserRequest() {
 		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();

@@ -19,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -98,7 +100,7 @@ public class Magic8BallServiceImpl implements Magic8BallService {
         return QuestionDTO.builder().question(userRequest.getQuestion()).truncatedQuestion(truncatedQuestion).languageCode(userRequest.getLanguage().getCode()).answer(randomAnswer).build();
     }
 
-    @Trasactional
+    @Transactional
     private void saveQuestionHistory(QuestionDTO questionDTO, String sentiment, String userId) {
         Optional<History> history = magic8BallRepository.findByTruncatedQuestion(questionDTO.getTruncatedQuestion(), questionDTO.getLanguageCode());
         if(history.isPresent()){
