@@ -2,6 +2,7 @@ package com.icims.labs.services.eightball.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -25,11 +26,10 @@ import com.icims.labs.services.eightball.service.ComprehendService;
 public class ComprehendServiceImpl implements ComprehendService {
 	private static final Logger logger = LoggerFactory.getLogger(ComprehendServiceImpl.class);
 	private AmazonComprehend comprehend;
-	AWSCredentialsProvider awsCreds = DefaultAWSCredentialsProviderChain.getInstance();
 
-	public ComprehendServiceImpl() {
-		this.comprehend = AmazonComprehendClientBuilder.standard().withCredentials(awsCreds).withRegion("us-east-1")
-				.build();
+	@Autowired
+	public ComprehendServiceImpl(AmazonComprehend amzComprehend) {
+		this.comprehend = amzComprehend;
 	}
 
 	@Override
