@@ -1,4 +1,4 @@
-package com.icims.labs.services.eightball.api;
+package com.icims.labs.services.eightball.service;
 
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.model.UserRequest;

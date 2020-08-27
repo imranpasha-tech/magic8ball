@@ -78,7 +78,7 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 		String question = "will it snow";
 		LocalDateTime now = LocalDateTime.now();
 
-		History history = History.builder().question(question).truncatedQuestion("willitsnow").frequency(1).languageCode("en_US").createdDate(now).answer("yes_answer")
+		History history = History.builder().question(question).truncatedQuestion("willitsnow").frequency(1).languageCode("en_US").createdDate(now).answer("yes_answer").sentiment("POSITIVE").userId("anonymous")
 				.build();
 
 		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
