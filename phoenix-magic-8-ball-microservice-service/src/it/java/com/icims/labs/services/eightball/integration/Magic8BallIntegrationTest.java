@@ -94,6 +94,6 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 
 	@Test
 	public void fetchErrorWhenLocaleIsInValidWhileFetchingTrendingQuestions() {
-		Assertions.assertThat(repo.getTrendingQuestionsByLanguage("e", PageRequest.of(0, 25)), is(empty()));
+		Assertions.assertThat(repo.getTrendingQuestionsByLanguage("e", PageRequest.of(0, 25))).isEmpty();
 	}
 }
