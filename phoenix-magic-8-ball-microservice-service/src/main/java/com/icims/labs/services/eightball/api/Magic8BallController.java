@@ -41,33 +41,42 @@ public class Magic8BallController {
      *  3. else returns "try_later"
      *
      */
-    @ApiOperation(value = "returns an answer with sentiment results and score for a given question")
-    @ApiResponses({ @ApiResponse(code = 200, message = "OK") })
-    @PostMapping("/answer")
-    public SentimentAnswer getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
-        logger.info("Fetching a random answer...");
+	@ApiOperation(value = "returns an answer with sentiment results and score for a given question")
+	@ApiResponses({ @ApiResponse(code = 200, message = "OK") })
+	@PostMapping("/answer")
+	public SentimentAnswer getRandomAnswer(@Valid @RequestBody UserRequest userRequest) {
+		logger.info("Fetching a random answer...");
 
-        SentimentAnswer answer;
-        try {
-            if (userRequest != null) {
-                String question = userRequest.getQuestion();
-                if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
-                    answer = SentimentAnswer.builder().answer("!").build();
-                    return answer;
-                }
-                if (question.endsWith("?") && question.length() <= 120) {
-                    answer = magic8BallService.getRandomAnswer(userRequest);
-                    return answer;
-                } else {
-                    answer = SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
-                    return answer;
-                }
-            }
+		try {
+			String question = userRequest.getQuestion();
+			if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
+				return SentimentAnswer.builder().answer("!").build();
+			} else if (question.endsWith("?") && question.length() <= 120) {
+				return magic8BallService.getRandomAnswer(userRequest);
+			} else {
+				return SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
+			}
 
-        } catch (Exception e) {
-            logger.error("Exception is raised during /api/answer api processing ", e);
-        }
-        return magic8BallService.getRandomAnswer(userRequest);
+		} catch (Exception e) {
+			logger.error("Exception is raised during /api/answer api processing ", e);
+			return SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
+		}
 
-    }
+	}
 }
+
+
+/*
+ * try { if (userRequest != null) { String question = userRequest.getQuestion();
+ * if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
+ * answer = SentimentAnswer.builder().answer("!").build(); } else if
+ * (question.endsWith("?") && question.length() <= 120) { answer =
+ * magic8BallService.getRandomAnswer(userRequest); } } else { answer =
+ * SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build(); }
+ * 
+ * } catch (Exception e) {
+ * logger.error("Exception is raised during /api/answer api processing ", e);
+ * return
+ * SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build(); }
+ * return answer;
+ */
