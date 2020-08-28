@@ -117,7 +117,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 		
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest());
 		
 		Assertions.assertThat(repo.findByQuestion("Will it rain ?")).noneMatch(history -> history.getQuestion().equals(question));
 	}
@@ -130,7 +130,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 		
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest());
 		
 		Assertions.assertThat(repo.findByQuestion("?")).noneMatch(history -> history.getQuestion().equals(question));
 	}

@@ -65,7 +65,7 @@ public class Magic8BallControllerTests {
 	public void responseAnswerWhenPayLoadContainsOnlyQuestionMark() throws Exception {
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"question\":\"?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.answer").value("!"));
+				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.answer").value("try_later"));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class Magic8BallControllerTests {
 
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"question\":\"Will it rain today\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.answer").value("try_later"));
 
 	}
 
@@ -91,7 +91,7 @@ public class Magic8BallControllerTests {
 	public void responseAnswerWhenPayLoadContainsToomuchLength() throws Exception {
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"question\":\"Will it rain todayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy?\",\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.answer").value("try_later"));
 
 	}
 }

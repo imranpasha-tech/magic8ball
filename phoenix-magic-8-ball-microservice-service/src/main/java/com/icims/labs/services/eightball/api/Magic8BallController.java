@@ -48,15 +48,7 @@ public class Magic8BallController {
 		logger.info("Fetching a random answer...");
 
 		try {
-			String question = userRequest.getQuestion();
-			if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
-				return SentimentAnswer.builder().answer("!").build();
-			} else if (question.endsWith("?") && question.length() <= 120) {
-				return magic8BallService.getRandomAnswer(userRequest);
-			} else {
-				return SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
-			}
-
+			return magic8BallService.getRandomAnswer(userRequest);
 		} catch (Exception e) {
 			logger.error("Exception is raised during /api/answer api processing ", e);
 			return SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
@@ -64,3 +56,11 @@ public class Magic8BallController {
 
 	}
 }
+	/*String question = userRequest.getQuestion();
+			if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
+					return SentimentAnswer.builder().answer("!").build();
+					} else if (question.endsWith("?") && question.length() <= 120) {
+					return magic8BallService.getRandomAnswer(userRequest);
+					} else {
+					return SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build();
+					}*/
