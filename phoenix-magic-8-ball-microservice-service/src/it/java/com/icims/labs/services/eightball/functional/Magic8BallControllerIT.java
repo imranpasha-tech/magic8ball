@@ -113,7 +113,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	public void randomAnswerFailsToPersistOnQuestionLengthAbove120Long() throws Exception {
 		String question = "blahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahah";
 		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build(); 
-		UserRequest request = UserRequest.builder().question(question).userId(null).language(language).build();
+		UserRequest request = UserRequest.builder().question(question).userId("anonymous").language(language).build();
 		
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
@@ -126,7 +126,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	public void randomAnswerFailsToPersistOnQuestionLengthOne() throws Exception {
 		String question = "?";
 		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build(); 
-		UserRequest request = UserRequest.builder().question(question).userId(null).language(language).build();
+		UserRequest request = UserRequest.builder().question(question).userId("anonymous").language(language).build();
 		
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())

@@ -58,7 +58,7 @@ public class Magic8BallControllerTests {
 
 	public static UserRequest buildMockUserRequest() {
 		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
-		return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
+		return UserRequest.builder().question("Will it rain ?").userId("anonymous").language(language).build();
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class Magic8BallControllerTests {
 	public void responseAnswerWhenPayLoadContainsNull() throws Exception {
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON).content(
 				"{\"question\":null,\"language\":{\"locale\":\"en-US\",\"code\":\"en-US\",\"name\":\"USA\"},\"userId\":\"dummy\"}"))
-				.andExpect(status().isOk());
+				.andExpect(status().is4xxClientError());
 
 	}
 

@@ -64,19 +64,3 @@ public class Magic8BallController {
 
 	}
 }
-
-
-/*
- * try { if (userRequest != null) { String question = userRequest.getQuestion();
- * if (question.trim().length() == 1 && question.trim().contentEquals("?")) {
- * answer = SentimentAnswer.builder().answer("!").build(); } else if
- * (question.endsWith("?") && question.length() <= 120) { answer =
- * magic8BallService.getRandomAnswer(userRequest); } } else { answer =
- * SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build(); }
- * 
- * } catch (Exception e) {
- * logger.error("Exception is raised during /api/answer api processing ", e);
- * return
- * SentimentAnswer.builder().answer(Answers.getAnswerByValue(21)).build(); }
- * return answer;
- */
