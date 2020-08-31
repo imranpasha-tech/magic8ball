@@ -12,28 +12,18 @@ import com.icims.labs.services.eightball.utility.Magic8BallRepo;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -76,7 +66,7 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 				.andExpect(status().isOk());
 
 		Assertions.assertThat(repo.findByQuestion("Will it rain ?")).anyMatch(
-				history -> history.getQuestion().equals("Will it rain ?") && history.getLanguageCode().equals("en_US"));
+				history -> history.getQuestion().equals("Will it rain ?") && history.getLanguageCode().equals("en"));
 	}
 
 	@Test
@@ -123,11 +113,11 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	public void randomAnswerFailsToPersistOnQuestionLengthAbove120Long() throws Exception {
 		String question = "blahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahahblahblahah";
 		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build(); 
-		UserRequest request = UserRequest.builder().question(question).userId(null).language(language).build();
+		UserRequest request = UserRequest.builder().question(question).userId("anonymous").language(language).build();
 		
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest());
 		
 		Assertions.assertThat(repo.findByQuestion("Will it rain ?")).noneMatch(history -> history.getQuestion().equals(question));
 	}
@@ -136,11 +126,11 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	public void randomAnswerFailsToPersistOnQuestionLengthOne() throws Exception {
 		String question = "?";
 		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build(); 
-		UserRequest request = UserRequest.builder().question(question).userId(null).language(language).build();
+		UserRequest request = UserRequest.builder().question(question).userId("anonymous").language(language).build();
 		
 		mockMvc.perform(post("/api/answer").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request))).andDo(print())
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest());
 		
 		Assertions.assertThat(repo.findByQuestion("?")).noneMatch(history -> history.getQuestion().equals(question));
 	}
@@ -163,8 +153,8 @@ public class Magic8BallControllerIT extends AbstractDataTestContainer{
 	}
 
 	private static UserRequest buildMockUserRequest() {
-		Language language = Language.builder().code("en_US").locale("en_US").name("USA").build();
-		return UserRequest.builder().question("Will it rain ?").userId(null).language(language).build();
+		Language language = Language.builder().code("en").locale("en_US").name("USA").build();
+		return UserRequest.builder().question("Will it rain ?").userId("anonymous").language(language).build();
 	}
 }
 

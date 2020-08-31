@@ -18,12 +18,18 @@ public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    
+    @Column(name="user_id")
+    private String userId;
+    
     @Column(name = "question", length = 120)
     private String question;
 
     @Column(name = "answer")
     private String answer;
+    
+    @Column(name = "sentiment")
+    private String sentiment;
 
     @Column(name = "truncated_question")
     private String truncatedQuestion;
