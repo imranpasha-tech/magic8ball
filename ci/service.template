@@ -107,7 +107,24 @@ Resources:
               awslogs-group: !Ref CloudWatchLogsGroup
               awslogs-region: !Ref AWS::Region
       TaskRoleArn: !Ref ECSServiceRole
-              
+
+  ComprehendPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Metadata:
+        cfn_nag:
+          rules_to_suppress:
+            - id: W13
+              reason: |
+                At time of writing, comprehend:DetectSentiment required '*' as its resource.
+                https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazonec2.html#amazonec2-actions-as-permissions
+      Properties:
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action: comprehend:DetectSentiment
+              Resource: "*"
+
   ECSServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -118,6 +135,8 @@ Resources:
             Principal:
               Service: ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
+      ManagedPolicyArns:
+         - !Ref ComprehendPolicy
 
   ECSDeployment:
     Type: AWS::CloudFormation::Stack
