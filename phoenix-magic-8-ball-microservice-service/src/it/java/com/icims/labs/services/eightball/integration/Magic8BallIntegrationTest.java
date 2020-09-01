@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.icims.labs.services.eightball.entity.History;
 import com.icims.labs.services.eightball.repository.Magic8BallRepository;
@@ -84,5 +85,15 @@ public class Magic8BallIntegrationTest extends AbstractDataTestContainer{
 		Assertions.assertThat(repo.save(history)).as("entity saved successfully")
 				.hasFieldOrPropertyWithValue("question", "will it snow").hasFieldOrPropertyWithValue("frequency", 1).hasFieldOrPropertyWithValue("answer", "yes_answer")
 				.hasFieldOrPropertyWithValue("languageCode", "en_US").hasFieldOrPropertyWithValue("createdDate", now).hasFieldOrPropertyWithValue("truncatedQuestion","willitsnow");
+	}
+
+	@Test
+	public void getTrendingQuestionsWhenValid() {
+		Assertions.assertThat(repo.getTrendingQuestionsByLanguage("en-US", PageRequest.of(0, 25))).isNotNull();
+	}
+
+	@Test
+	public void fetchErrorWhenLocaleIsInValidWhileFetchingTrendingQuestions() {
+		Assertions.assertThat(repo.getTrendingQuestionsByLanguage("e", PageRequest.of(0, 25))).isEmpty();
 	}
 }
