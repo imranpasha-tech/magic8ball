@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class Magic8BallHistoryServiceImpl implements Magic8BallHistoryService {
@@ -20,9 +22,22 @@ public class Magic8BallHistoryServiceImpl implements Magic8BallHistoryService {
         return magic8BallRepository.findAll();
     }
 
+    /**
+     *
+     * @param languageCode; cannot be null
+     * @throws IllegalArgumentException; if languageCode is null
+     * @return list of top 25 trending questions by language or empty list.
+     */
     @Override
     public List<History> getTrendingQuestions(String languageCode) {
-        return magic8BallRepository.getTrendingQuestionsByLanguage(languageCode, PageRequest.of(0, 25));
+        Objects.requireNonNull(languageCode, "language code cannot be null");
+
+        List<History> history = magic8BallRepository.getTrendingQuestionsByLanguage(languageCode, PageRequest.of(0, 25));
+
+        if (!history.isEmpty())
+            return history;
+
+        return Collections.emptyList();
     }
 
 }

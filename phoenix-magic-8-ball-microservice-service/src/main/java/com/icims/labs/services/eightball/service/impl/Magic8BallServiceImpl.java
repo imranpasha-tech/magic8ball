@@ -28,6 +28,11 @@ public class Magic8BallServiceImpl implements Magic8BallService {
     private static final String POSITIVE = "POSITIVE";
     private static final String NEGATIVE = "NEGATIVE";
     private static final String NEUTRAL = "NEUTRAL";
+    private Random random;
+
+    Magic8BallServiceImpl() {
+    	this.random = new Random();
+	}
 
     @Autowired
     private Magic8BallRepository magic8BallRepository;
@@ -38,12 +43,13 @@ public class Magic8BallServiceImpl implements Magic8BallService {
     /**
      * Service method that fetches an answer by analyzing sentiment of the question.
      *
-     * @return String
+     * @return SentimentAnswer;contains sentiment type ("POSITIVE, NEGATIVE, NEUTRAL, MIXED ") with respective scores.
      */
 	public SentimentAnswer getRandomAnswer(UserRequest userRequest) {
 		SentimentResult sentimentResult = comprehendService.getQuestionSentiment(userRequest);
 		String randomAnswer;
 		String sentiment;
+
 		if (sentimentResult.getSentiment().equals("MIXED")) {
 			sentiment = decideAnswer(sentimentResult.getScore());
 			randomAnswer = mapSentimentToAnswers(sentiment);
@@ -78,6 +84,8 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 
 
 	private String decideAnswer(SentimentScore score) {
+		assert score != null;
+
 		if (score.getPositive() > score.getNegative() && score.getPositive() > score.getNeutral()) {
 			return POSITIVE;
 		} else if (score.getNegative() > score.getPositive() && score.getNegative() > score.getNeutral()) {
@@ -87,9 +95,9 @@ public class Magic8BallServiceImpl implements Magic8BallService {
 		}
 	}
 
-	private static int getRandomNumberInRange(int min, int max) {
-		Random r = new Random();
-		return r.nextInt((max - min) + 1) + min;
+	private int getRandomNumberInRange(int min, int max) {
+		assert min < max;
+		return random.nextInt((max - min) + 1) + min;
 	}
 
     private QuestionDTO buildQuestionDTO(UserRequest userRequest, String randomAnswer) {
